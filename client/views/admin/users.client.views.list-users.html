@@ -1,0 +1,16 @@
+<md-content layout-padding>
+  <h1 class="md-display-1">User List</h1>
+  <md-input-container class="md-block">
+    <input type="text" ng-model="vm.search" placeholder="User Search" ng-change="vm.figureOutItemsToDisplay()" />
+  </md-input-container>
+  <md-list>
+    <md-list-item class="md-2-line" ng-repeat="user in vm.pagedItems" ui-sref="admin.user({userId: user._id})">
+      <img class="md-avatar" ng-src="{{user.profileImageURL}}">
+      <div class="md-list-item-text" layout="column">
+        <h4>{{user.displayName}} <{{user.email}}></h4>
+        <p>Roles: <span ng-bind="user.roles"></span></p>
+      </div>
+    </md-list-item>
+  </md-list>
+  <md-pagination item-total="vm.filterLength" goto-page="vm.pageChanged()" position="center" current-page="vm.currentPage" step="vm.itemsPerPage"></md-pagination>
+</md-content>
