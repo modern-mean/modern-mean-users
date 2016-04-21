@@ -261,13 +261,61 @@
   'use strict';
 
   angular
-    .module('users.admin')
-    .run(menuConfig);
+    .module('users')
+    .controller('PasswordController', PasswordController);
 
-  menuConfig.$inject = [];
+  PasswordController.$inject = ['Authentication', 'PasswordValidator', '$stateParams', '$location', '$log'];
 
-  function menuConfig() {
+  function PasswordController(Authentication, PasswordValidator, $stateParams, $location, $log) {
+    var vm = this;
 
+    vm.askForPasswordReset = askForPasswordReset;
+    vm.authentication = Authentication;
+    vm.popoverMsg = PasswordValidator.getPopoverMsg();
+    vm.resetUserPassword = resetUserPassword;
+
+
+    function askForPasswordReset() {
+      $log.debug('PasswordController::askForPasswordReset', vm);
+      vm.success = vm.error = undefined;
+
+      Authentication
+        .forgotPassword(vm.credentials).$promise
+        .then(
+          function (response) {
+            vm.credentials = undefined;
+            vm.success = response.message;
+            $log.debug('PasswordController::askForPasswordReset::success', response);
+          },
+          function (err) {
+            vm.credentials = undefined;
+            vm.error = err.data.message;
+            $log.error('PasswordController::askForPasswordReset::error', vm);
+          }
+        );
+    }
+
+    function resetUserPassword() {
+      $log.debug('PasswordController::resetUserPassword', vm);
+      vm.success = vm.error = undefined;
+
+      Authentication
+        .passwordReset($stateParams.token, vm.credentials).$promise
+        .then(
+          function (response) {
+            vm.passwordDetails = undefined;
+            $location.path('/password/reset/success');
+            $log.debug('PasswordController::resetUserPassword::success', response);
+          },
+          function (err) {
+            vm.passwordDetails = undefined;
+            vm.error = err.data.message;
+            $log.error('PasswordController::resetUserPassword::error', err);
+          }
+        );
+    }
+
+    $log.info('PasswordController::Init', vm);
   }
 })();
 
@@ -275,46 +323,55 @@
   'use strict';
 
   angular
-    .module('users.routes')
-    .run(authCheck);
+    .module('users')
+    .directive('passwordValidator', passwordValidator);
 
-  authCheck.$inject = ['$rootScope', '$state', 'Authentication', 'Authorization', '$log'];
-  function authCheck($rootScope, $state, Authentication, Authorization, $log) {
-    // Check authentication before changing state
-    $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+  passwordValidator.$inject = ['PasswordValidator', '$log'];
 
-      if (toState.data.ignoreAuth) {
-        $log.debug('Users::AuthCheck::Ignored', toState);
-        return true;
-      }
+  function passwordValidator(PasswordValidator, $log) {
+    return {
+      require: 'ngModel',
+      link: function(scope, element, attrs, ngModel) {
+        ngModel.$validators.requirements = function (password) {
+          $log.info('Users::Directive::passwordValidator::Init', password);
+          var status = true;
+          if (password) {
+            var result = PasswordValidator.getResult(password);
+            var requirementsIdx = 0;
 
-      Authentication.ready
-        .then(function (auth) {
-          $log.debug('Users::AuthCheck::Ready', Authentication);
-          if (toState.data && toState.data.roles && toState.data.roles.length > 0) {
-            var allowed = false;
-            toState.data.roles.forEach(function (role) {
-              if (role === 'guest' || (Authentication.authorization.roles && Authentication.authorization.roles.indexOf(role) !== -1)) {
-                allowed = true;
-                return true;
-              }
-            });
+            // Requirements Meter - visual indicator for users
+            var requirementsMeter = [
+              { color: 'danger', progress: '20' },
+              { color: 'warning', progress: '40' },
+              { color: 'info', progress: '60' },
+              { color: 'primary', progress: '80' },
+              { color: 'success', progress: '100' }
+            ];
+            /*
+            //commented out during test creation.  Not sure how this would ever happen
+            if (result.errors.length < requirementsMeter.length) {
+              requirementsIdx = requirementsMeter.length - result.errors.length - 1;
+            }
+            */
 
-            if (!allowed) {
-              $log.debug('Users::AuthCheck::NotAllowed', Authentication);
-              event.preventDefault();
-              if (Authentication.token !== undefined) {
-                $state.go('root.forbidden');
-              } else {
-                $state.go('root.user.authentication.signin').then(function () {
-                  $rootScope.storePreviousState(toState, toParams);
-                });
-              }
+            scope.requirementsColor = requirementsMeter[requirementsIdx].color;
+            scope.requirementsProgress = requirementsMeter[requirementsIdx].progress;
+
+            if (result.errors.length) {
+              scope.popoverMsg = PasswordValidator.getPopoverMsg();
+              scope.passwordErrors = result.errors;
+              status = false;
+            } else {
+              scope.popoverMsg = '';
+              scope.passwordErrors = [];
+              status = true;
             }
           }
-        });
-    });
+          return status;
+        };
 
+      }
+    };
   }
 })();
 
@@ -322,22 +379,41 @@
   'use strict';
 
   angular
-    .module('users.routes')
-    .run(navigationConfig);
+    .module('users')
+    .directive('passwordVerify', passwordVerify);
 
-  navigationConfig.$inject = ['$state', '$log'];
+  DirectiveController.$inject = ['$scope', '$log'];
+  function DirectiveController($scope, $log) {
+    var vm = this;
 
-  function navigationConfig($state, $log) {
+    $scope.$watchCollection('vm.passwordVerify', function (newObj, oldObj) {
+      if (newObj.newPassword && newObj.verifyPassword) {
+        if (newObj.newPassword !== newObj.verifyPassword) {
+          vm.model.$setValidity('required', false);
+        } else {
+          vm.model.$setValidity('required', true);
+        }
+      }
+    }, true);
 
-    var rootState = $state.get('root');
-    rootState.views.rightnav.templateUrl = 'modules/users/client/views/navigation/users.client.views.navigation.rightnav.html';
-    rootState.views.rightnav.controller = 'UsersRightNavController';
-    rootState.views.header.templateUrl = 'modules/users/client/views/navigation/users.client.views.navigation.header.html';
-    rootState.views.header.controller = 'UsersHeaderController';
+    $log.info('Users::Directive::passwordVerify::Init', vm);
 
-    $log.info('Users::navigationConfig::Init', rootState);
   }
 
+  function passwordVerify() {
+    return {
+      require: 'ngModel',
+      scope: {
+        passwordVerify: '='
+      },
+      controller: DirectiveController,
+      controllerAs: 'vm',
+      bindToController: true,
+      link: function(scope, element, attrs, ngModel) {
+        scope.vm.model = ngModel;
+      }
+    };
+  }
 })();
 
 (function() {
@@ -571,61 +647,138 @@
   'use strict';
 
   angular
+    .module('users.admin')
+    .run(menuConfig);
+
+  menuConfig.$inject = [];
+
+  function menuConfig() {
+
+  }
+})();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('users.routes')
+    .run(authCheck);
+
+  authCheck.$inject = ['$rootScope', '$state', 'Authentication', 'Authorization', '$log'];
+  function authCheck($rootScope, $state, Authentication, Authorization, $log) {
+    // Check authentication before changing state
+    $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+
+      if (toState.data.ignoreAuth) {
+        $log.debug('Users::AuthCheck::Ignored', toState);
+        return true;
+      }
+
+      Authentication.ready
+        .then(function (auth) {
+          $log.debug('Users::AuthCheck::Ready', Authentication);
+          if (toState.data && toState.data.roles && toState.data.roles.length > 0) {
+            var allowed = false;
+            toState.data.roles.forEach(function (role) {
+              if (role === 'guest' || (Authentication.authorization.roles && Authentication.authorization.roles.indexOf(role) !== -1)) {
+                allowed = true;
+                return true;
+              }
+            });
+
+            if (!allowed) {
+              $log.debug('Users::AuthCheck::NotAllowed', Authentication);
+              event.preventDefault();
+              if (Authentication.token !== undefined) {
+                $state.go('root.forbidden');
+              } else {
+                $state.go('root.user.authentication.signin').then(function () {
+                  $rootScope.storePreviousState(toState, toParams);
+                });
+              }
+            }
+          }
+        });
+    });
+
+  }
+})();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('users.routes')
+    .run(navigationConfig);
+
+  navigationConfig.$inject = ['$state', '$log'];
+
+  function navigationConfig($state, $log) {
+
+    var rootState = $state.get('root');
+    rootState.views.rightnav.templateUrl = 'modules/users/client/views/navigation/users.client.views.navigation.rightnav.html';
+    rootState.views.rightnav.controller = 'UsersRightNavController';
+    rootState.views.header.templateUrl = 'modules/users/client/views/navigation/users.client.views.navigation.header.html';
+    rootState.views.header.controller = 'UsersHeaderController';
+
+    $log.info('Users::navigationConfig::Init', rootState);
+  }
+
+})();
+
+(function() {
+  'use strict';
+
+  angular
     .module('users')
-    .controller('PasswordController', PasswordController);
+    .controller('SigninAuthenticationController', SigninAuthenticationController);
 
-  PasswordController.$inject = ['Authentication', 'PasswordValidator', '$stateParams', '$location', '$log'];
+  SigninAuthenticationController.$inject = ['Authentication', '$state', '$mdToast', '$log'];
 
-  function PasswordController(Authentication, PasswordValidator, $stateParams, $location, $log) {
+  function SigninAuthenticationController(Authentication, $state, $mdToast, $log) {
     var vm = this;
 
-    vm.askForPasswordReset = askForPasswordReset;
     vm.authentication = Authentication;
-    vm.popoverMsg = PasswordValidator.getPopoverMsg();
-    vm.resetUserPassword = resetUserPassword;
+    vm.clearForm = clearForm;
+    vm.credentials = {};
+    vm.error = undefined;
+    vm.forms = {};
+    vm.signin = signin;
 
-
-    function askForPasswordReset() {
-      $log.debug('PasswordController::askForPasswordReset', vm);
-      vm.success = vm.error = undefined;
+    function signin () {
+      vm.error = undefined;
+      $log.debug('SigninAuthenticationController::signin', vm);
+      var toast = $mdToast.simple()
+        .position('bottom right')
+        .hideDelay(6000);
 
       Authentication
-        .forgotPassword(vm.credentials).$promise
+        .signin(vm.credentials)
         .then(
           function (response) {
-            vm.credentials = undefined;
-            vm.success = response.message;
-            $log.debug('PasswordController::askForPasswordReset::success', response);
+            $state.go($state.previous.state.name || 'root.home', $state.previous.params);
+            toast.textContent('Signin Successful!').theme('toast-success');
+            $mdToast.show(toast);
+            vm.clearForm();
+            $log.debug('SigninAuthenticationController::signin::success', response);
           },
           function (err) {
-            vm.credentials = undefined;
             vm.error = err.data.message;
-            $log.error('PasswordController::askForPasswordReset::error', vm);
+            toast.textContent('Signin Failed!').theme('toast-error');
+            $mdToast.show(toast);
+            $log.debug('SigninAuthenticationController::signin::error', err);
           }
         );
     }
 
-    function resetUserPassword() {
-      $log.debug('PasswordController::resetUserPassword', vm);
-      vm.success = vm.error = undefined;
-
-      Authentication
-        .passwordReset($stateParams.token, vm.credentials).$promise
-        .then(
-          function (response) {
-            vm.passwordDetails = undefined;
-            $location.path('/password/reset/success');
-            $log.debug('PasswordController::resetUserPassword::success', response);
-          },
-          function (err) {
-            vm.passwordDetails = undefined;
-            vm.error = err.data.message;
-            $log.error('PasswordController::resetUserPassword::error', err);
-          }
-        );
+    function clearForm() {
+      vm.credentials.email = '';
+      vm.credentials.password = '';
+      vm.forms.signIn.$setPristine();
+      vm.forms.signIn.$setUntouched();
     }
 
-    $log.info('PasswordController::Init', vm);
+    $log.info('SigninAuthenticationController::Init', vm);
   }
 })();
 
@@ -634,95 +787,168 @@
 
   angular
     .module('users')
-    .directive('passwordValidator', passwordValidator);
+    .controller('SignupAuthenticationController', SignupAuthenticationController);
 
-  passwordValidator.$inject = ['PasswordValidator', '$log'];
+  SignupAuthenticationController.$inject = ['Authentication', 'PasswordValidator', '$state', '$location', '$mdToast', '$log'];
 
-  function passwordValidator(PasswordValidator, $log) {
-    return {
-      require: 'ngModel',
-      link: function(scope, element, attrs, ngModel) {
-        ngModel.$validators.requirements = function (password) {
-          $log.info('Users::Directive::passwordValidator::Init', password);
-          var status = true;
-          if (password) {
-            var result = PasswordValidator.getResult(password);
-            var requirementsIdx = 0;
-
-            // Requirements Meter - visual indicator for users
-            var requirementsMeter = [
-              { color: 'danger', progress: '20' },
-              { color: 'warning', progress: '40' },
-              { color: 'info', progress: '60' },
-              { color: 'primary', progress: '80' },
-              { color: 'success', progress: '100' }
-            ];
-            /*
-            //commented out during test creation.  Not sure how this would ever happen
-            if (result.errors.length < requirementsMeter.length) {
-              requirementsIdx = requirementsMeter.length - result.errors.length - 1;
-            }
-            */
-
-            scope.requirementsColor = requirementsMeter[requirementsIdx].color;
-            scope.requirementsProgress = requirementsMeter[requirementsIdx].progress;
-
-            if (result.errors.length) {
-              scope.popoverMsg = PasswordValidator.getPopoverMsg();
-              scope.passwordErrors = result.errors;
-              status = false;
-            } else {
-              scope.popoverMsg = '';
-              scope.passwordErrors = [];
-              status = true;
-            }
-          }
-          return status;
-        };
-
-      }
-    };
-  }
-})();
-
-(function() {
-  'use strict';
-
-  angular
-    .module('users')
-    .directive('passwordVerify', passwordVerify);
-
-  DirectiveController.$inject = ['$scope', '$log'];
-  function DirectiveController($scope, $log) {
+  function SignupAuthenticationController(Authentication, PasswordValidator, $state, $location, $mdToast, $log) {
     var vm = this;
 
-    $scope.$watchCollection('vm.passwordVerify', function (newObj, oldObj) {
-      if (newObj.newPassword && newObj.verifyPassword) {
-        if (newObj.newPassword !== newObj.verifyPassword) {
-          vm.model.$setValidity('required', false);
-        } else {
-          vm.model.$setValidity('required', true);
-        }
-      }
-    }, true);
+    vm.authentication = Authentication;
+    vm.clearForm = clearForm;
+    vm.error = undefined;
+    vm.forms = {};
+    vm.popoverMsg = PasswordValidator.getPopoverMsg();
+    vm.signup = signup;
+    vm.user = {};
 
-    $log.info('Users::Directive::passwordVerify::Init', vm);
+    function signup () {
+      $log.debug('SignupAuthenticationController::signup', vm);
+      vm.error = undefined;
 
+      var toast = $mdToast.simple()
+        .position('bottom right')
+        .hideDelay(6000);
+
+      Authentication
+        .signup(vm.user)
+        .then(
+          function (response) {
+            $state.go('root.home');
+            toast.textContent('Signup Successful!').theme('toast-success');
+            $mdToast.show(toast);
+            vm.clearForm();
+            $log.debug('SignupAuthenticationController::signup::success', response);
+          },
+          function (err) {
+            vm.error = err.data.message;
+            $log.debug('SignupAuthenticationController::signup::error', err);
+          }
+        );
+    }
+
+    function clearForm() {
+      vm.user = {};
+      vm.user.email = '';
+      vm.user.password = '';
+      vm.forms.signUp.$rollbackViewValue();
+      vm.forms.signUp.$setPristine();
+      vm.forms.signUp.$setUntouched();
+    }
+
+    $log.info('SignupAuthenticationController::Init', vm);
   }
+})();
 
-  function passwordVerify() {
-    return {
-      require: 'ngModel',
-      scope: {
-        passwordVerify: '='
-      },
-      controller: DirectiveController,
-      controllerAs: 'vm',
-      bindToController: true,
-      link: function(scope, element, attrs, ngModel) {
-        scope.vm.model = ngModel;
+(function() {
+  'use strict';
+
+  angular
+    .module('users')
+    .controller('SocialAuthenticationController', SocialAuthenticationController);
+
+  SocialAuthenticationController.$inject = ['$location', '$state', '$log'];
+
+  function SocialAuthenticationController($location, $state, $log) {
+    var vm = this;
+
+    vm.callOauthProvider = callOauthProvider;
+    vm.error = $location.search().err || undefined;
+
+    function callOauthProvider (url) {
+      if ($state.previous && $state.previous.href) {
+        url += '?redirect_to=' + encodeURIComponent($state.previous.href);
       }
-    };
+
+      $location.path(url);
+    }
+
+    $log.info('SocialAuthenticationController::Init', vm);
+  }
+})();
+
+(function () {
+  'use strict';
+
+  angular
+    .module('users')
+    .controller('UsersHeaderController', UsersHeaderController);
+
+  UsersHeaderController.$inject = ['$mdComponentRegistry', 'Authentication', '$log'];
+
+  function UsersHeaderController($mdComponentRegistry, Authentication, $log) {
+    var vm = this;
+
+    vm.authentication = Authentication;
+    vm.isAdmin = false;
+    vm.navigation = {};
+
+    $mdComponentRegistry
+      .when('coreLeftNav')
+      .then(function(nav) {
+        vm.navigation.left = nav;
+      });
+
+    $mdComponentRegistry
+      .when('coreRightNav')
+      .then(function(nav) {
+        vm.navigation.right = nav;
+      });
+
+    Authentication.ready
+      .then(function () {
+        vm.isAdmin = (Authentication.authorization.roles && Authentication.authorization.roles.indexOf('admin') !== -1);
+        $log.debug('UsersHeaderController::AuthReady', Authentication);
+      });
+
+
+    $log.info('UsersHeaderController::Init', vm);
+  }
+})();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('users')
+    .controller('UsersRightNavController', UsersRightNavController);
+
+  UsersRightNavController.$inject = ['Authentication', '$state', '$mdComponentRegistry', '$mdToast', '$log'];
+
+  function UsersRightNavController(Authentication, $state, $mdComponentRegistry, $mdToast, $log) {
+    var vm = this;
+
+    vm.authentication = Authentication;
+    vm.signout = signout;
+
+    $mdComponentRegistry
+      .when('coreRightNav')
+      .then(function(nav) {
+        vm.navigation = nav;
+      });
+
+
+    function signout() {
+      $log.debug('UserRightNavController::signout', vm);
+      vm.navigation
+        .close()
+        .then(Authentication.signout)
+        .then(function () {
+          $state.go('root.user.authentication.signin');
+          var toast = $mdToast.simple()
+            .textContent('Signout Successful!')
+            .position('bottom right')
+            .hideDelay(6000)
+            .theme('toast-success');
+
+          $mdToast.show(toast);
+          $log.debug('UserRightNavController::success', Authentication);
+        });
+
+    }
+
+
+    $log.info('UserRightNavController::Init', vm);
   }
 })();
 
@@ -1179,231 +1405,5 @@
     function remove(provider) {
       vm.success = vm.error = undefined;
     }
-  }
-})();
-
-(function() {
-  'use strict';
-
-  angular
-    .module('users')
-    .controller('SigninAuthenticationController', SigninAuthenticationController);
-
-  SigninAuthenticationController.$inject = ['Authentication', '$state', '$mdToast', '$log'];
-
-  function SigninAuthenticationController(Authentication, $state, $mdToast, $log) {
-    var vm = this;
-
-    vm.authentication = Authentication;
-    vm.clearForm = clearForm;
-    vm.credentials = {};
-    vm.error = undefined;
-    vm.forms = {};
-    vm.signin = signin;
-
-    function signin () {
-      vm.error = undefined;
-      $log.debug('SigninAuthenticationController::signin', vm);
-      var toast = $mdToast.simple()
-        .position('bottom right')
-        .hideDelay(6000);
-
-      Authentication
-        .signin(vm.credentials)
-        .then(
-          function (response) {
-            $state.go($state.previous.state.name || 'root.home', $state.previous.params);
-            toast.textContent('Signin Successful!').theme('toast-success');
-            $mdToast.show(toast);
-            vm.clearForm();
-            $log.debug('SigninAuthenticationController::signin::success', response);
-          },
-          function (err) {
-            vm.error = err.data.message;
-            toast.textContent('Signin Failed!').theme('toast-error');
-            $mdToast.show(toast);
-            $log.debug('SigninAuthenticationController::signin::error', err);
-          }
-        );
-    }
-
-    function clearForm() {
-      vm.credentials.email = '';
-      vm.credentials.password = '';
-      vm.forms.signIn.$setPristine();
-      vm.forms.signIn.$setUntouched();
-    }
-
-    $log.info('SigninAuthenticationController::Init', vm);
-  }
-})();
-
-(function() {
-  'use strict';
-
-  angular
-    .module('users')
-    .controller('SignupAuthenticationController', SignupAuthenticationController);
-
-  SignupAuthenticationController.$inject = ['Authentication', 'PasswordValidator', '$state', '$location', '$mdToast', '$log'];
-
-  function SignupAuthenticationController(Authentication, PasswordValidator, $state, $location, $mdToast, $log) {
-    var vm = this;
-
-    vm.authentication = Authentication;
-    vm.clearForm = clearForm;
-    vm.error = undefined;
-    vm.forms = {};
-    vm.popoverMsg = PasswordValidator.getPopoverMsg();
-    vm.signup = signup;
-    vm.user = {};
-
-    function signup () {
-      $log.debug('SignupAuthenticationController::signup', vm);
-      vm.error = undefined;
-
-      var toast = $mdToast.simple()
-        .position('bottom right')
-        .hideDelay(6000);
-
-      Authentication
-        .signup(vm.user)
-        .then(
-          function (response) {
-            $state.go('root.home');
-            toast.textContent('Signup Successful!').theme('toast-success');
-            $mdToast.show(toast);
-            vm.clearForm();
-            $log.debug('SignupAuthenticationController::signup::success', response);
-          },
-          function (err) {
-            vm.error = err.data.message;
-            $log.debug('SignupAuthenticationController::signup::error', err);
-          }
-        );
-    }
-
-    function clearForm() {
-      vm.user = {};
-      vm.user.email = '';
-      vm.user.password = '';
-      vm.forms.signUp.$rollbackViewValue();
-      vm.forms.signUp.$setPristine();
-      vm.forms.signUp.$setUntouched();
-    }
-
-    $log.info('SignupAuthenticationController::Init', vm);
-  }
-})();
-
-(function() {
-  'use strict';
-
-  angular
-    .module('users')
-    .controller('SocialAuthenticationController', SocialAuthenticationController);
-
-  SocialAuthenticationController.$inject = ['$location', '$state', '$log'];
-
-  function SocialAuthenticationController($location, $state, $log) {
-    var vm = this;
-
-    vm.callOauthProvider = callOauthProvider;
-    vm.error = $location.search().err || undefined;
-
-    function callOauthProvider (url) {
-      if ($state.previous && $state.previous.href) {
-        url += '?redirect_to=' + encodeURIComponent($state.previous.href);
-      }
-
-      $location.path(url);
-    }
-
-    $log.info('SocialAuthenticationController::Init', vm);
-  }
-})();
-
-(function () {
-  'use strict';
-
-  angular
-    .module('users')
-    .controller('UsersHeaderController', UsersHeaderController);
-
-  UsersHeaderController.$inject = ['$mdComponentRegistry', 'Authentication', '$log'];
-
-  function UsersHeaderController($mdComponentRegistry, Authentication, $log) {
-    var vm = this;
-
-    vm.authentication = Authentication;
-    vm.isAdmin = false;
-    vm.navigation = {};
-
-    $mdComponentRegistry
-      .when('coreLeftNav')
-      .then(function(nav) {
-        vm.navigation.left = nav;
-      });
-
-    $mdComponentRegistry
-      .when('coreRightNav')
-      .then(function(nav) {
-        vm.navigation.right = nav;
-      });
-
-    Authentication.ready
-      .then(function () {
-        vm.isAdmin = (Authentication.authorization.roles && Authentication.authorization.roles.indexOf('admin') !== -1);
-        $log.debug('UsersHeaderController::AuthReady', Authentication);
-      });
-
-
-    $log.info('UsersHeaderController::Init', vm);
-  }
-})();
-
-(function() {
-  'use strict';
-
-  angular
-    .module('users')
-    .controller('UsersRightNavController', UsersRightNavController);
-
-  UsersRightNavController.$inject = ['Authentication', '$state', '$mdComponentRegistry', '$mdToast', '$log'];
-
-  function UsersRightNavController(Authentication, $state, $mdComponentRegistry, $mdToast, $log) {
-    var vm = this;
-
-    vm.authentication = Authentication;
-    vm.signout = signout;
-
-    $mdComponentRegistry
-      .when('coreRightNav')
-      .then(function(nav) {
-        vm.navigation = nav;
-      });
-
-
-    function signout() {
-      $log.debug('UserRightNavController::signout', vm);
-      vm.navigation
-        .close()
-        .then(Authentication.signout)
-        .then(function () {
-          $state.go('root.user.authentication.signin');
-          var toast = $mdToast.simple()
-            .textContent('Signout Successful!')
-            .position('bottom right')
-            .hideDelay(6000)
-            .theme('toast-success');
-
-          $mdToast.show(toast);
-          $log.debug('UserRightNavController::success', Authentication);
-        });
-
-    }
-
-
-    $log.info('UserRightNavController::Init', vm);
   }
 })();
