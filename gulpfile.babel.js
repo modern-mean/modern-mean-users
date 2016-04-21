@@ -49,6 +49,7 @@ function templates() {
   return gulp.src(['./client/**/*.html'])
     .pipe(templateCache({
       root: 'modern-mean-users/',
+      module: 'users'
     }))
     .pipe(gulp.dest('./dist/client'));
 }
@@ -59,7 +60,7 @@ function client() {
   let filterJS = filter(['**/*.js'], { restore: true }),
     filterCSS = filter(['**/*.css'], { restore: true });
 
-  return gulp.src('./client/**/*.{js,css}')
+  return gulp.src(['./client/**/*.module.js', './client/**/*.{js,css}'])
     .pipe(filterJS)
     .pipe(concat('application.js'))
     .pipe(gulp.dest('./dist/client'))

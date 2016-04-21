@@ -419,6 +419,89 @@
 (function() {
   'use strict';
 
+  angular
+    .module('users.admin')
+    .run(menuConfig);
+
+  menuConfig.$inject = [];
+
+  function menuConfig() {
+
+  }
+})();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('users.routes')
+    .run(authCheck);
+
+  authCheck.$inject = ['$rootScope', '$state', 'Authentication', 'Authorization', '$log'];
+  function authCheck($rootScope, $state, Authentication, Authorization, $log) {
+    // Check authentication before changing state
+    $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+
+      if (toState.data.ignoreAuth) {
+        $log.debug('Users::AuthCheck::Ignored', toState);
+        return true;
+      }
+
+      Authentication.ready
+        .then(function (auth) {
+          $log.debug('Users::AuthCheck::Ready', Authentication);
+          if (toState.data && toState.data.roles && toState.data.roles.length > 0) {
+            var allowed = false;
+            toState.data.roles.forEach(function (role) {
+              if (role === 'guest' || (Authentication.authorization.roles && Authentication.authorization.roles.indexOf(role) !== -1)) {
+                allowed = true;
+                return true;
+              }
+            });
+
+            if (!allowed) {
+              $log.debug('Users::AuthCheck::NotAllowed', Authentication);
+              event.preventDefault();
+              if (Authentication.token !== undefined) {
+                $state.go('root.forbidden');
+              } else {
+                $state.go('root.user.authentication.signin').then(function () {
+                  $rootScope.storePreviousState(toState, toParams);
+                });
+              }
+            }
+          }
+        });
+    });
+
+  }
+})();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('users.routes')
+    .run(navigationConfig);
+
+  navigationConfig.$inject = ['$state', '$log'];
+
+  function navigationConfig($state, $log) {
+
+    var rootState = $state.get('root');
+    rootState.views.rightnav.templateUrl = 'modules/users/client/views/navigation/users.client.views.navigation.rightnav.html';
+    rootState.views.rightnav.controller = 'UsersRightNavController';
+    rootState.views.header.templateUrl = 'modules/users/client/views/navigation/users.client.views.navigation.header.html';
+    rootState.views.header.controller = 'UsersHeaderController';
+
+    $log.info('Users::navigationConfig::Init', rootState);
+  }
+
+})();
+
+(function() {
+  'use strict';
+
   //TODO this should be Users service
   angular
     .module('users.admin')
@@ -648,12 +731,44 @@
 
   angular
     .module('users.admin')
-    .run(menuConfig);
+    .controller('UserController', UserController);
 
-  menuConfig.$inject = [];
+  UserController.$inject = ['userResolve', '$state', '$log'];
 
-  function menuConfig() {
+  function UserController(userResolve, $state, $log) {
+    var vm = this;
 
+    vm.remove = remove;
+    vm.update = update;
+    vm.user = userResolve;
+
+    function remove (user) {
+      vm.error = undefined;
+      vm.user.$remove(
+        function () {
+          $state.go('root.admin.users');
+        },
+        function (err) {
+          vm.error = err.data.message;
+        }
+      );
+    }
+
+    function update() {
+
+      vm.user.$update(
+        function (user) {
+          $state.go('root.admin.user', {
+            userId: user._id
+          });
+        },
+        function (err) {
+          vm.error = err.data.message;
+        }
+      );
+    }
+
+    $log.info('Users.Admin::UserController::Init', vm);
   }
 })();
 
@@ -661,69 +776,21 @@
   'use strict';
 
   angular
-    .module('users.routes')
-    .run(authCheck);
+    .module('users.admin')
+    .controller('UserListController', UserListController);
 
-  authCheck.$inject = ['$rootScope', '$state', 'Authentication', 'Authorization', '$log'];
-  function authCheck($rootScope, $state, Authentication, Authorization, $log) {
-    // Check authentication before changing state
-    $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+  UserListController.$inject = ['UserAdmin', '$log'];
 
-      if (toState.data.ignoreAuth) {
-        $log.debug('Users::AuthCheck::Ignored', toState);
-        return true;
-      }
+  function UserListController(UserAdmin, $log) {
+    var vm = this;
 
-      Authentication.ready
-        .then(function (auth) {
-          $log.debug('Users::AuthCheck::Ready', Authentication);
-          if (toState.data && toState.data.roles && toState.data.roles.length > 0) {
-            var allowed = false;
-            toState.data.roles.forEach(function (role) {
-              if (role === 'guest' || (Authentication.authorization.roles && Authentication.authorization.roles.indexOf(role) !== -1)) {
-                allowed = true;
-                return true;
-              }
-            });
-
-            if (!allowed) {
-              $log.debug('Users::AuthCheck::NotAllowed', Authentication);
-              event.preventDefault();
-              if (Authentication.token !== undefined) {
-                $state.go('root.forbidden');
-              } else {
-                $state.go('root.user.authentication.signin').then(function () {
-                  $rootScope.storePreviousState(toState, toParams);
-                });
-              }
-            }
-          }
-        });
+    UserAdmin.query(function (users) {
+      vm.users = users;
+      $log.debug('UserListController::UsersLoaded', vm.users);
     });
 
+    $log.info('UserListController::Init', vm);
   }
-})();
-
-(function() {
-  'use strict';
-
-  angular
-    .module('users.routes')
-    .run(navigationConfig);
-
-  navigationConfig.$inject = ['$state', '$log'];
-
-  function navigationConfig($state, $log) {
-
-    var rootState = $state.get('root');
-    rootState.views.rightnav.templateUrl = 'modules/users/client/views/navigation/users.client.views.navigation.rightnav.html';
-    rootState.views.rightnav.controller = 'UsersRightNavController';
-    rootState.views.header.templateUrl = 'modules/users/client/views/navigation/users.client.views.navigation.header.html';
-    rootState.views.header.controller = 'UsersHeaderController';
-
-    $log.info('Users::navigationConfig::Init', rootState);
-  }
-
 })();
 
 (function() {
@@ -949,102 +1016,6 @@
 
 
     $log.info('UserRightNavController::Init', vm);
-  }
-})();
-
-(function() {
-  'use strict';
-
-  angular
-    .module('users.routes')
-    .factory('authInterceptor', authInterceptor);
-
-  authInterceptor.$inject = ['$q', '$injector', '$log'];
-
-  function authInterceptor($q, $injector, $log) {
-    $log.info('Users::authInterceptor::Init');
-    return {
-      responseError: function(rejection) {
-        switch (rejection.status) {
-          case 401:
-            $injector.get('$state').transitionTo('root.user.authentication.signin');
-            $log.debug('Users::authInterceptor::401', rejection);
-            break;
-          case 403:
-            $injector.get('$state').transitionTo('root.forbidden');
-            $log.debug('Users::authInterceptor::403', rejection);
-            break;
-        }
-        return $q.reject(rejection);
-      }
-    };
-  }
-})();
-
-(function() {
-  'use strict';
-
-  angular
-    .module('users.admin')
-    .controller('UserController', UserController);
-
-  UserController.$inject = ['userResolve', '$state', '$log'];
-
-  function UserController(userResolve, $state, $log) {
-    var vm = this;
-
-    vm.remove = remove;
-    vm.update = update;
-    vm.user = userResolve;
-
-    function remove (user) {
-      vm.error = undefined;
-      vm.user.$remove(
-        function () {
-          $state.go('root.admin.users');
-        },
-        function (err) {
-          vm.error = err.data.message;
-        }
-      );
-    }
-
-    function update() {
-
-      vm.user.$update(
-        function (user) {
-          $state.go('root.admin.user', {
-            userId: user._id
-          });
-        },
-        function (err) {
-          vm.error = err.data.message;
-        }
-      );
-    }
-
-    $log.info('Users.Admin::UserController::Init', vm);
-  }
-})();
-
-(function() {
-  'use strict';
-
-  angular
-    .module('users.admin')
-    .controller('UserListController', UserListController);
-
-  UserListController.$inject = ['UserAdmin', '$log'];
-
-  function UserListController(UserAdmin, $log) {
-    var vm = this;
-
-    UserAdmin.query(function (users) {
-      vm.users = users;
-      $log.debug('UserListController::UsersLoaded', vm.users);
-    });
-
-    $log.info('UserListController::Init', vm);
   }
 })();
 
@@ -1405,5 +1376,34 @@
     function remove(provider) {
       vm.success = vm.error = undefined;
     }
+  }
+})();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('users.routes')
+    .factory('authInterceptor', authInterceptor);
+
+  authInterceptor.$inject = ['$q', '$injector', '$log'];
+
+  function authInterceptor($q, $injector, $log) {
+    $log.info('Users::authInterceptor::Init');
+    return {
+      responseError: function(rejection) {
+        switch (rejection.status) {
+          case 401:
+            $injector.get('$state').transitionTo('root.user.authentication.signin');
+            $log.debug('Users::authInterceptor::401', rejection);
+            break;
+          case 403:
+            $injector.get('$state').transitionTo('root.forbidden');
+            $log.debug('Users::authInterceptor::403', rejection);
+            break;
+        }
+        return $q.reject(rejection);
+      }
+    };
   }
 })();
