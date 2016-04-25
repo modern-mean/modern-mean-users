@@ -1,7 +1,7 @@
 'use strict';
 
 import multer from 'multer';
-import config from 'modernMean/config';
+import { config } from './config';
 
 function filter(req, file, cb) {
   if (file.mimetype !== 'image/png' && file.mimetype !== 'image/jpg' && file.mimetype !== 'image/jpeg' && file.mimetype !== 'image/gif') {
@@ -18,7 +18,7 @@ function storage() {
 }
 
 function destination(req, file, cb) {
-  cb(null, config.uploads.profileUpload.dest);
+  cb(null, config.uploads.profile.destination);
 }
 
 function filename(req, file, cb) {

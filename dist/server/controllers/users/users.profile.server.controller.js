@@ -13,9 +13,7 @@ var _multer = require('multer');
 
 var _multer2 = _interopRequireDefault(_multer);
 
-var _config = require('modernMean/config');
-
-var _config2 = _interopRequireDefault(_config);
+var _config = require('../../config/config');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -34,7 +32,7 @@ function addresses(req, res) {
 function changeProfilePicture(req, res) {
 
   var user = req.user;
-  user.profileImageURL = './img/profile/uploads/' + req.file.filename;
+  user.profileImageURL = _config.config.uploads.profile.public + req.file.filename;
   return user.save().then(user => {
     res.json(user);
   }).catch(err => {

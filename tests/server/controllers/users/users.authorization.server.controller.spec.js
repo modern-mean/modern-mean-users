@@ -1,6 +1,6 @@
 'use strict';
 
-import mongoose from 'mongoose';
+import { mongoose } from 'modern-mean-core-material/dist/server/app/mongoose';
 import * as authorizationController from '../../../../server/controllers/users/users.authorization.server.controller';
 import aclModule from '../../../../server/config/acl';
 import userModel from '../../../../server/models/users.server.model.user';
@@ -52,7 +52,7 @@ describe('/modules/users/server/controllers/users/users.authorization.server.con
             userRoles: sandbox.stub().resolves(['user']),
             whatResources: sandbox.stub().resolves(['test'])
           };
-          aclStub = sandbox.stub(aclModule, 'getAcl').returns(mockAcl);
+          aclStub = sandbox.stub(aclModule, 'get').returns(mockAcl);
           return authorizationController.read(mockReq, mockRes);
         });
 
@@ -76,7 +76,7 @@ describe('/modules/users/server/controllers/users/users.authorization.server.con
           mockAcl = {
             userRoles: sandbox.stub().rejects('Error!')
           };
-          aclStub = sandbox.stub(aclModule, 'getAcl').returns(mockAcl);
+          aclStub = sandbox.stub(aclModule, 'get').returns(mockAcl);
           return authorizationController.read(mockReq, mockRes);
         });
 

@@ -5,9 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.signToken = undefined;
 
-var _config = require('modernMean/config');
-
-var _config2 = _interopRequireDefault(_config);
+var _config = require('../config/config');
 
 var _jsonwebtoken = require('jsonwebtoken');
 
@@ -33,9 +31,9 @@ function signToken(user, options) {
       user: user._id.toString()
     };
 
-    jwtOptions = _lodash2.default.merge(_config2.default.jwt.options, options);
+    jwtOptions = _lodash2.default.merge(_config.config.jwt.options, options);
 
-    token = _jsonwebtoken2.default.sign(payload, _config2.default.jwt.secret, jwtOptions);
+    token = _jsonwebtoken2.default.sign(payload, _config.config.jwt.secret, jwtOptions);
 
     resolve(token);
   });

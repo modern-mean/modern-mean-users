@@ -1,6 +1,6 @@
 'use strict';
 
-import mongoose from 'mongoose';
+import { mongoose } from 'modern-mean-core-material/dist/server/app/mongoose';
 import * as authenticationController from '../../../../server/controllers/users/users.authentication.server.controller';
 import jwtToken from '../../../../server/authentication/jwtToken';
 import userModel from '../../../../server/models/users.server.model.user';
@@ -113,7 +113,7 @@ describe('/modules/users/server/controllers/users/users.authentication.server.co
           aclStub = {
             addUserRoles: sandbox.stub().resolves()
           };
-          sandbox.stub(aclModule, 'getAcl').returns(aclStub);
+          sandbox.stub(aclModule, 'get').returns(aclStub);
           mockUser = sandbox.stub(user, 'save').resolves(user);
           return authenticationController.signup(mockReq, mockRes);
         });

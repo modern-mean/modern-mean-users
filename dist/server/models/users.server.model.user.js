@@ -5,13 +5,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getModels = exports.models = exports.create = exports.init = undefined;
 
-var _mongoose = require('mongoose');
+var _mongoose = require('modern-mean-core-material/dist/server/app/mongoose');
 
-var _mongoose2 = _interopRequireDefault(_mongoose);
+var _logger = require('../config/logger');
 
-var _winston = require('winston');
-
-var _winston2 = _interopRequireDefault(_winston);
+var _logger2 = _interopRequireDefault(_logger);
 
 var _usersServerSchema = require('../schemas/users.server.schema.user');
 
@@ -35,23 +33,24 @@ let models = {};
 
 function init() {
   return new Promise(function (resolve, reject) {
-    _winston2.default.debug('User::Model::Init::Start');
+    _logger2.default.debug('User::Model::Init::Start');
     if (!models.user) {
-      models.user = _mongoose2.default.model('User', _usersServerSchema2.default);
+      models.user = _mongoose.mongoose.model('User', _usersServerSchema2.default);
+      console.log('HERE!!!', models.user);
     }
 
     if (!models.provider) {
-      models.provider = _mongoose2.default.model('Provider', _usersServerSchema4.default);
+      models.provider = _mongoose.mongoose.model('Provider', _usersServerSchema4.default);
     }
 
     if (!models.email) {
-      models.email = _mongoose2.default.model('Email', _usersServerSchema6.default);
+      models.email = _mongoose.mongoose.model('Email', _usersServerSchema6.default);
     }
 
     if (!models.address) {
-      models.address = _mongoose2.default.model('Address', _usersServerSchema8.default);
+      models.address = _mongoose.mongoose.model('Address', _usersServerSchema8.default);
     }
-    _winston2.default.verbose('User::Model::Init::Success');
+    _logger2.default.verbose('User::Model::Init::Success');
     return resolve(models);
   });
 }

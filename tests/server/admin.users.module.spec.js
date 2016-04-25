@@ -1,11 +1,11 @@
 'use strict';
 
-import express from 'express';
+import { express } from 'modern-mean-core-material/dist/server/app/express';
 import adminRoutes from '../../server/routes/admin.server.routes';
 import adminPolicy from '../../server/policies/admin.server.policy';
 import aclModule from '../../server/config/acl';
 import * as adminUsers from '../../server/admin.users.module';
-import mongooseModule from '../../../core/server/app/mongoose';
+import mongooseModule from 'modern-mean-core-material/dist/server/app/mongoose';
 
 let sandbox;
 
@@ -35,7 +35,7 @@ describe('/modules/users/server/admin.users.module.js', () => {
       describe('success', () => {
 
         beforeEach(() => {
-          app = express();
+          app = express;
           routesStub = sandbox.stub(adminRoutes, 'init').resolves();
           policyStub = sandbox.stub(adminPolicy, 'policy').resolves();
           aclStub = sandbox.stub(aclModule, 'init').resolves();
@@ -76,7 +76,7 @@ describe('/modules/users/server/admin.users.module.js', () => {
           let aclStub;
 
           beforeEach(() => {
-            app = express();
+            app = express;
             aclStub = sandbox.stub(aclModule, 'init').rejects('Error!');
           });
 
@@ -90,7 +90,7 @@ describe('/modules/users/server/admin.users.module.js', () => {
           let routesStub;
 
           beforeEach(() => {
-            app = express();
+            app = express;
             routesStub = sandbox.stub(adminRoutes, 'init').rejects('Error!');
           });
 

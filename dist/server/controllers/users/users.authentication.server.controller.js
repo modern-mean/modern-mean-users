@@ -49,7 +49,7 @@ function signup(req, res) {
   user.emails.push(email);
 
   return user.save().then(user => {
-    return _acl2.default.getAcl().addUserRoles(user._id.toString(), 'user').then(() => {
+    return _acl2.default.get().addUserRoles(user._id.toString(), 'user').then(() => {
       return _jwtToken2.default.signToken(user);
     }).then(function (token) {
       return res.json({ token: token });

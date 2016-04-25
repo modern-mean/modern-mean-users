@@ -1,6 +1,6 @@
 'use strict';
 
-import mongoose from 'mongoose';
+import { mongoose } from 'modern-mean-core-material/dist/server/app/mongoose';
 import validator from 'validator';
 
 let Schema = mongoose.Schema;
@@ -57,7 +57,7 @@ AddressSchema.pre('save', function (next) {
   if (this.isModified()) {
     this.timestamps.updated = Date.now();
   }
-  
+
   next();
 });
 

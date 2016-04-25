@@ -1,17 +1,17 @@
 'use strict';
 
 import passport from 'passport';
-import express from 'express';
-import winston from 'winston';
+import { express } from 'modern-mean-core-material/dist/server/app/express';
+import logger from '../config/logger';
 import nodeacl from 'acl';
 import aclModule from '../config/acl';
 import * as admin from '../controllers/admin.server.controller';
 
 function init(app) {
   return new Promise((resolve, reject) => {
-    winston.debug('Users::Routes::Admin::Start');
+    logger.debug('Users::Routes::Admin::Start');
     let router = express.Router();
-    let acl = aclModule.getAcl();
+    let acl = aclModule.get();
 
     //Set JWT Auth for all user Routes
     router.all('*', passport.authenticate('jwt', { session: false }));
@@ -30,7 +30,7 @@ function init(app) {
 
     app.use('/api/users', router);
 
-    winston.verbose('Users::Routes::Admin::Success');
+    logger.verbose('Users::Routes::Admin::Success');
     return resolve(app);
   });
 }

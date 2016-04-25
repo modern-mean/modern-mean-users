@@ -1,15 +1,15 @@
 'use strict';
 
 import passport from 'passport';
-import express from 'express';
-import winston from 'winston';
+import { express } from 'modern-mean-core-material/dist/server/app/express';
+import logger from '../config/logger';
 import multer from 'multer';
 import { profile, password, authorization } from '../controllers/users.server.controller';
 import profileUpload from '../config/profileUpload';
 
 function init(app) {
   return new Promise((resolve, reject) => {
-    winston.debug('Users::Routes::Start');
+    logger.debug('Users::Routes::Start');
     let router = express.Router();
 
     let upload = multer({
@@ -34,7 +34,7 @@ function init(app) {
     router.route('/picture').post(upload.single('newProfilePicture'), profile.changeProfilePicture);
 
     app.use('/api/me', router);
-    winston.verbose('Users::Routes::Success');
+    logger.verbose('Users::Routes::Success');
     return resolve(app);
   });
 }

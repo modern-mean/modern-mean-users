@@ -4,9 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _mongoose = require('mongoose');
-
-var _mongoose2 = _interopRequireDefault(_mongoose);
+var _mongoose = require('modern-mean-core-material/dist/server/app/mongoose');
 
 var _validator = require('validator');
 
@@ -14,7 +12,7 @@ var _validator2 = _interopRequireDefault(_validator);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-let Schema = _mongoose2.default.Schema;
+let Schema = _mongoose.mongoose.Schema;
 
 let AddressSchema = new Schema({
   streetAddress: {

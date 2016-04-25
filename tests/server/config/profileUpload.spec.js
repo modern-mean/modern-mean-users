@@ -1,7 +1,6 @@
 'use strict';
 
 import * as profileUpload from '../../../server/config/profileUpload';
-import config from 'modernMean/config';
 
 let sandbox;
 
@@ -96,7 +95,7 @@ describe('/modules/users/server/config/profileUpload.js', () => {
       });
 
       it('should call the callback', () => {
-        return mockCb.should.have.been.calledWith(null, config.uploads.profileUpload.dest);
+        return mockCb.should.have.been.calledWith(null, config.config.uploads.profile.destination);
       });
 
     });

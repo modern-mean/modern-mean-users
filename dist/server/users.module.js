@@ -5,9 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.init = undefined;
 
-var _winston = require('winston');
+var _logger = require('./config/logger');
 
-var _winston2 = _interopRequireDefault(_winston);
+var _logger2 = _interopRequireDefault(_logger);
 
 var _usersServerModel = require('./models/users.server.model.user');
 
@@ -29,36 +29,38 @@ var _authentication = require('./authentication/authentication');
 
 var _authentication2 = _interopRequireDefault(_authentication);
 
-var _config = require('modernMean/config');
+var _config = require('./config/config');
 
-var _config2 = _interopRequireDefault(_config);
+var _acl = require('./config/acl');
+
+var _acl2 = _interopRequireDefault(_acl);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function init(app) {
-  _winston2.default.debug('Users::Init::Start');
+  _logger2.default.debug('Users::Init::Start');
 
   let modelInit = new Promise(function (resolve, reject) {
-    _winston2.default.debug('Users::Init::Model::Start');
+    _logger2.default.debug('Users::Init::Model::Start');
     _usersServerModel2.default.init().then(function (model) {
-      if (_config2.default.seedDB) {
+      if (_config.config.mongoose.seed === 'true') {
         _usersServerModelUser2.default.init();
       }
-      _winston2.default.verbose('Users::Init::Model::Success');
+      _logger2.default.verbose('Users::Init::Model::Success');
       return resolve();
     }).catch(function (err) {
-      _winston2.default.error(err);
+      _logger2.default.error(err);
       return reject(err);
     });
   });
 
   let expressInit = new Promise(function (resolve, reject) {
-    _winston2.default.debug('Users::Init::Express::Start');
+    _logger2.default.debug('Users::Init::Express::Start');
     _authentication2.default.init(app).then(_usersServer2.default.init).then(_authServer2.default.init).then(function () {
-      _winston2.default.verbose('Users::Init::Success');
+      _logger2.default.verbose('Users::Init::Success');
       return resolve(app);
     }).catch(function (err) {
-      _winston2.default.error('Users::Init::Error::' + err);
+      _logger2.default.error('Users::Init::Error::' + err);
       return reject(err);
     });
   });

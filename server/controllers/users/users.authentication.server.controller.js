@@ -34,7 +34,7 @@ function signup(req, res) {
   return user.save()
     .then(user => {
       return aclModule
-        .getAcl()
+        .get()
         .addUserRoles(user._id.toString(), 'user')
         .then(() => {
           return authentication.signToken(user);

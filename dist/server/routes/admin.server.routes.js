@@ -9,13 +9,11 @@ var _passport = require('passport');
 
 var _passport2 = _interopRequireDefault(_passport);
 
-var _express = require('express');
+var _express = require('modern-mean-core-material/dist/server/app/express');
 
-var _express2 = _interopRequireDefault(_express);
+var _logger = require('../config/logger');
 
-var _winston = require('winston');
-
-var _winston2 = _interopRequireDefault(_winston);
+var _logger2 = _interopRequireDefault(_logger);
 
 var _acl = require('acl');
 
@@ -35,9 +33,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function init(app) {
   return new Promise((resolve, reject) => {
-    _winston2.default.debug('Users::Routes::Admin::Start');
-    let router = _express2.default.Router();
-    let acl = _acl4.default.getAcl();
+    _logger2.default.debug('Users::Routes::Admin::Start');
+    let router = _express.express.Router();
+    let acl = _acl4.default.get();
 
     //Set JWT Auth for all user Routes
     router.all('*', _passport2.default.authenticate('jwt', { session: false }));
@@ -52,7 +50,7 @@ function init(app) {
 
     app.use('/api/users', router);
 
-    _winston2.default.verbose('Users::Routes::Admin::Success');
+    _logger2.default.verbose('Users::Routes::Admin::Success');
     return resolve(app);
   });
 }

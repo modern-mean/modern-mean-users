@@ -1,46 +1,47 @@
 'use strict';
 
-import winston from 'winston';
+import logger from './config/logger';
 import userModel from './models/users.server.model.user';
 import userSeed from './models/users.server.model.user.seed';
 import userRoutes from './routes/users.server.routes';
 import authRoutes from './routes/auth.server.routes';
 import authentication from './authentication/authentication';
-import config from 'modernMean/config';
+import { config } from './config/config';
+import aclModule from './config/acl';
 
 
 function init(app) {
-  winston.debug('Users::Init::Start');
+  logger.debug('Users::Init::Start');
 
   let modelInit = new Promise(function (resolve, reject) {
-    winston.debug('Users::Init::Model::Start');
+    logger.debug('Users::Init::Model::Start');
     userModel
       .init()
       .then(function (model) {
-        if (config.seedDB) {
+        if (config.mongoose.seed === 'true') {
           userSeed.init();
         }
-        winston.verbose('Users::Init::Model::Success');
+        logger.verbose('Users::Init::Model::Success');
         return resolve();
       })
       .catch(function (err) {
-        winston.error(err);
+        logger.error(err);
         return reject(err);
       });
   });
 
 
   let expressInit = new Promise(function (resolve, reject) {
-    winston.debug('Users::Init::Express::Start');
+    logger.debug('Users::Init::Express::Start');
     authentication.init(app)
       .then(userRoutes.init)
       .then(authRoutes.init)
       .then(function () {
-        winston.verbose('Users::Init::Success');
+        logger.verbose('Users::Init::Success');
         return resolve(app);
       })
       .catch(function (err) {
-        winston.error('Users::Init::Error::' + err);
+        logger.error('Users::Init::Error::' + err);
         return reject(err);
       });
   });

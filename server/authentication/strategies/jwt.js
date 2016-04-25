@@ -1,8 +1,8 @@
 'use strict';
 
 import passport from 'passport';
-import config from 'modernMean/config';
-import winston from 'winston';
+import { config } from '../../config/config';
+import logger from '../../config/logger';
 import JwtStrategy from 'passport-jwt';
 import userModel from '../../models/users.server.model.user';
 
@@ -11,7 +11,7 @@ let extract = JwtStrategy.ExtractJwt;
 
 function strategy() {
   return new Promise(function (resolve, reject) {
-    winston.debug('Users::Authentication::JWT::Start');
+    logger.debug('Users::Authentication::JWT::Start');
     var opts = {};
     opts.secretOrKey = config.jwt.secret;
     opts.jwtFromRequest = extract.fromAuthHeader();
@@ -31,7 +31,7 @@ function strategy() {
         });
 
     }));
-    winston.verbose('Users::Authentication::Jwt::Success');
+    logger.verbose('Users::Authentication::Jwt::Success');
     return resolve();
   });
 }

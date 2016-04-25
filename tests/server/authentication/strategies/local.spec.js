@@ -1,12 +1,13 @@
 'use strict';
 
-import express from 'express';
+import expressModule from 'modern-mean-core-material/dist/server/app/express';
 import passport from 'passport';
 import request from 'supertest';
-import mongoose from 'mongoose';
+import { mongoose } from 'modern-mean-core-material/dist/server/app/mongoose';
 import * as localStrategy from '../../../../server/authentication/strategies/local';
 import userSeed from '../../../../server/models/users.server.model.user.seed';
-import mean from '../../../../../core/server/app/init';
+import mean from 'modern-mean-core-material/dist/server/app/init';
+import { load } from 'modern-mean-core-material/dist/server/config/config'
 
 let sandbox;
 let app;
@@ -15,11 +16,9 @@ let users;
 describe('/modules/users/server/authentication/strategies/local.js', () => {
 
   before(() => {
+    process.env.MEAN_CORE_MODULES_CUSTOM = './server/users.module.js';
+    load();
     return mean.start()
-      .then(express => {
-        app = express;
-        return;
-      })
       .then(userSeed.init)
       .then(seedUsers => {
         users = seedUsers;
@@ -83,7 +82,7 @@ describe('/modules/users/server/authentication/strategies/local.js', () => {
     describe('success', () => {
 
       it('should authenticate the user', done => {
-        request(app)
+        request(expressModule.getExpressApp())
           .post('/api/auth/signin')
           .send({ email: users.user.providers[0].email, password: users.user.password })
           .expect(200)
@@ -100,8 +99,8 @@ describe('/modules/users/server/authentication/strategies/local.js', () => {
 
       describe('user not found', () => {
 
-        it('should responsd 500', done => {
-          request(app)
+        it('should respond 500', done => {
+          request(expressModule.getExpressApp())
             .post('/api/auth/signin')
             .send({ email: 'asdfadsf434983249@asdfjie.com', password: 'asdfasdf' })
             .expect(500)
@@ -116,7 +115,7 @@ describe('/modules/users/server/authentication/strategies/local.js', () => {
       describe('authentication failure', () => {
 
         it('should responsd 500', done => {
-          request(app)
+          request(expressModule.getExpressApp())
             .post('/api/auth/signin')
             .send({ email: users.user.providers[0].email, password: 'failme' })
             .expect(500)
@@ -142,7 +141,7 @@ describe('/modules/users/server/authentication/strategies/local.js', () => {
         });
 
         it('should respond 500', done => {
-          request(app)
+          request(expressModule.getExpressApp())
             .post('/api/auth/signin')
             .send({ email: users.user.providers[0].email, password: users.user.password })
             .expect(500)

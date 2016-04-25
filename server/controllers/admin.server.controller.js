@@ -1,7 +1,7 @@
 'use strict';
 
 import lodash from 'lodash';
-import mongoose from 'mongoose';
+import { mongoose } from 'modern-mean-core-material/dist/server/app/mongoose';
 import userModel from '../models/users.server.model.user';
 
 function read(req, res) {

@@ -6,7 +6,7 @@ function read(req, res) {
   let response = {};
 
   return aclModule
-    .getAcl()
+    .get()
     .userRoles(req.user._id.toString())
     .then(roles => {
       response.roles = roles;
@@ -14,7 +14,7 @@ function read(req, res) {
     })
     .then(roles => {
       return aclModule
-        .getAcl()
+        .get()
         .whatResources(roles)
         .then(resources => {
           response.resources = resources;

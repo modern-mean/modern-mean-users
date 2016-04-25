@@ -14,11 +14,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function read(req, res) {
   let response = {};
 
-  return _acl2.default.getAcl().userRoles(req.user._id.toString()).then(roles => {
+  return _acl2.default.get().userRoles(req.user._id.toString()).then(roles => {
     response.roles = roles;
     return roles;
   }).then(roles => {
-    return _acl2.default.getAcl().whatResources(roles).then(resources => {
+    return _acl2.default.get().whatResources(roles).then(resources => {
       response.resources = resources;
       return resources;
     });

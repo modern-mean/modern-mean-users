@@ -1,6 +1,6 @@
 'use strict';
 
-import express from 'express';
+import { express } from 'modern-mean-core-material/dist/server/app/express';
 import * as adminRoutes from '../../../server/routes/admin.server.routes.js';
 import adminController from '../../../server/controllers/admin.server.controller';
 import userModel from '../../../server/models/users.server.model.user';
@@ -12,7 +12,7 @@ describe('modules/users/server/routes/admin.server.routes.js', () => {
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    sandbox.stub(aclModule, 'getAcl').returns({
+    sandbox.stub(aclModule, 'get').returns({
       middleware: sandbox.stub().returns(function (req, res, next) {
         next();
       })

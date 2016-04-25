@@ -4,9 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _mongoose = require('mongoose');
-
-var _mongoose2 = _interopRequireDefault(_mongoose);
+var _mongoose = require('modern-mean-core-material/dist/server/app/mongoose');
 
 var _crypto = require('crypto');
 
@@ -38,7 +36,7 @@ var _usersServerSchema6 = _interopRequireDefault(_usersServerSchema5);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-let Schema = _mongoose2.default.Schema;
+let Schema = _mongoose.mongoose.Schema;
 
 /**
  * User Schema

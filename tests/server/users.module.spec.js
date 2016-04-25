@@ -1,6 +1,6 @@
 'use strict';
 
-import express from 'express';
+import expressModule from 'modern-mean-core-material/dist/server/app/express';
 import * as users from '../../server/users.module';
 import userRoutes from '../../server/routes/users.server.routes';
 import authRoutes from '../../server/routes/auth.server.routes';
@@ -11,6 +11,14 @@ import authentication from '../../server/authentication/authentication';
 let sandbox;
 
 describe('/modules/users/server/users.module.js', () => {
+
+  before(() => {
+    return expressModule.init();
+  });
+
+  after(() => {
+    return expressModule.destroy();
+  });
 
   beforeEach(() => {
     return sandbox = sinon.sandbox.create();
@@ -37,15 +45,17 @@ describe('/modules/users/server/users.module.js', () => {
         let mockSeed;
 
         beforeEach(() => {
-          app = express();
+          app = expressModule.getExpressApp();
           mockModel = sandbox.stub(userModel, 'init').resolves();
           mockSeed = sandbox.stub(userSeed, 'init');
-          config.seedDB = true;
+          process.env.MEAN_USERS_SEED = true;
+          config.load();
           return users.init(app);
         });
 
         afterEach(() => {
-          config.seedDB = false;
+          delete process.env.MEAN_USERS_SEED;
+          config.load();
         });
 
         it('should call user seed init', () => {
@@ -57,7 +67,7 @@ describe('/modules/users/server/users.module.js', () => {
       describe('success', () => {
 
         beforeEach(() => {
-          app = express();
+          app = expressModule.getExpressApp();
           mockModel = sandbox.stub(userModel, 'init').resolves();
           authenticationSpy = sandbox.spy(authentication, 'init');
           userRoutesSpy = sandbox.spy(userRoutes, 'init');
@@ -102,7 +112,7 @@ describe('/modules/users/server/users.module.js', () => {
 
         describe('express init', () => {
           beforeEach(() => {
-            app = express();
+            app = expressModule.getExpressApp();
             mockRoutes = sandbox.stub(userRoutes, 'init').rejects();
             mockModel = sandbox.stub(userModel, 'init').resolves();
           });
@@ -115,7 +125,7 @@ describe('/modules/users/server/users.module.js', () => {
 
         describe('model init', () => {
           beforeEach(() => {
-            app = express();
+            app = expressModule.getExpressApp();
             mockModel = sandbox.stub(userModel, 'init').rejects();
           });
 

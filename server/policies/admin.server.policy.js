@@ -1,13 +1,13 @@
 'use strict';
 
-import winston from 'winston';
+import logger from '../config/logger';
 import aclModule from '../config/acl';
 
 function policy() {
   return new Promise((resolve, reject) => {
-    winston.debug('Users::Policy::Admin::Start');
+    logger.debug('Users::Policy::Admin::Start');
     aclModule
-      .getAcl()
+      .get()
       .allow([{
         roles: ['admin'],
         allows: [{
@@ -16,11 +16,11 @@ function policy() {
         }]
       }])
       .then(() => {
-        winston.verbose('Users::Routes::Admin::Success');
+        logger.verbose('Users::Routes::Admin::Success');
         return resolve();
       })
       .catch(err => {
-        winston.error(err);
+        logger.error(err);
         return reject(err.message);
       });
   });

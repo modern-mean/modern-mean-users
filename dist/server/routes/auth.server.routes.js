@@ -5,17 +5,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.init = undefined;
 
-var _express = require('express');
-
-var _express2 = _interopRequireDefault(_express);
+var _express = require('modern-mean-core-material/dist/server/app/express');
 
 var _passport = require('passport');
 
 var _passport2 = _interopRequireDefault(_passport);
 
-var _winston = require('winston');
+var _logger = require('../config/logger');
 
-var _winston2 = _interopRequireDefault(_winston);
+var _logger2 = _interopRequireDefault(_logger);
 
 var _usersServer = require('../controllers/users.server.controller');
 
@@ -27,14 +25,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function init(app) {
   return new Promise(function (resolve, reject) {
-    _winston2.default.debug('Users::Routes::Authentication::Start');
-    let router = _express2.default.Router();
+    _logger2.default.debug('Users::Routes::Authentication::Start');
+    let router = _express.express.Router();
 
     router.route('/signup').post(_usersServerModel2.default.create, _usersServer.authentication.signup);
     router.route('/signin').post(_passport2.default.authenticate('local', { session: false }), _usersServer.authentication.signin);
 
     app.use('/api/auth', router);
-    _winston2.default.verbose('Users::Routes::Authentication::Success');
+    _logger2.default.verbose('Users::Routes::Authentication::Success');
     return resolve(app);
   });
 }

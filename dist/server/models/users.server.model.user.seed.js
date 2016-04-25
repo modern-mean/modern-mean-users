@@ -9,13 +9,9 @@ var _chalk = require('chalk');
 
 var _chalk2 = _interopRequireDefault(_chalk);
 
-var _winston = require('winston');
+var _logger = require('../config/logger');
 
-var _winston2 = _interopRequireDefault(_winston);
-
-var _config = require('modernMean/config');
-
-var _config2 = _interopRequireDefault(_config);
+var _logger2 = _interopRequireDefault(_logger);
 
 var _usersServerModel = require('./users.server.model.user');
 
@@ -72,7 +68,7 @@ function getUser(template) {
 
 function seedUser() {
   return new Promise((resolve, reject) => {
-
+    _logger2.default.debug('Users::Model::Seed::User::Start');
     let LocalProvider = _usersServerModel2.default.getModels().provider;
     let Email = _usersServerModel2.default.getModels().email;
 
@@ -115,21 +111,21 @@ function seedUser() {
       });
 
       user.providers.push(provider);
+      _logger2.default.debug('Users::Model::Seed::User::PreSave');
       user.save().then(() => {
-
-        _acl2.default.getAcl().addUserRoles(user._id.toString(), 'user');
-        users.user = user.toObject();
-        users.user.password = password;
-        _winston2.default.info('Users::Model::Seed::User::' + _chalk2.default.bold.magenta(user.emails[0].email + ':' + password));
-        resolve(user);
-      });
-      /*
-      Commented out till i figure out how to mock it.
-      .catch(err => {
-        console.log(chalk.bold.red('Users::Model::Seed::User::Error::' + err));
+        _acl2.default.get().addUserRoles(user._id.toString(), ['user']).then(() => {
+          users.user = user.toObject();
+          users.user.password = password;
+          _logger2.default.info('Users::Model::Seed::User::' + _chalk2.default.bold.magenta(user.emails[0].email + ':' + password));
+          resolve(user);
+        }).catch(err => {
+          console.log(_chalk2.default.bold.red('Users::Model::Seed::User::Role::Error::' + err));
+          reject(err);
+        });
+      }).catch(err => {
+        console.log(_chalk2.default.bold.red('Users::Model::Seed::User::Error::' + err));
         reject(err);
       });
-      */
     });
   });
 }
@@ -168,19 +164,19 @@ function seedAdmin() {
       user.providers.push(provider);
 
       user.save().then(() => {
-        _acl2.default.getAcl().addUserRoles(user._id.toString(), ['admin']);
-        users.admin = user.toObject();
-        users.admin.password = password;
-        _winston2.default.info('Users::Model::Seed::User::' + _chalk2.default.bold.magenta(user.emails[0].email + ':' + password));
-        resolve(user);
-      });
-      /*
-      Commented out till i figure out how to mock it.
-      .catch(err => {
-        console.log(chalk.bold.red('Users::Model::Seed::Admin::Error::' + err));
+        _acl2.default.get().addUserRoles(user._id.toString(), ['admin']).then(() => {
+          users.admin = user.toObject();
+          users.admin.password = password;
+          _logger2.default.info('Users::Model::Seed::User::' + _chalk2.default.bold.magenta(user.emails[0].email + ':' + password));
+          resolve(user);
+        }).catch(err => {
+          console.log(_chalk2.default.bold.red('Users::Model::Seed::Admin::Role::Error::' + err));
+          reject(err);
+        });
+      }).catch(err => {
+        console.log(_chalk2.default.bold.red('Users::Model::Seed::Admin::Error::' + err));
         reject(err);
       });
-      */
     });
   });
 }
@@ -192,18 +188,14 @@ function init() {
       return resolve(users);
     }
 
-    _winston2.default.debug('Users::Model::Seed::Start');
+    _logger2.default.debug('Users::Model::Seed::Start');
     seedUser().then(seedAdmin).then(() => {
-      _winston2.default.verbose('Users::Model::Seed::Success');
+      _logger2.default.verbose('Users::Model::Seed::Success');
       resolve(users);
-    });
-    /*
-    Commented out till i figure out how to mock it.
-    .catch((err) => {
-      console.log(chalk.bold.red('Users::Model::Seed::Error::' + err));
+    }).catch(err => {
+      console.log(_chalk2.default.bold.red('Users::Model::Seed::Error::' + err));
       reject(err);
     });
-    */
   });
 }
 

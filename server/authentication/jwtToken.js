@@ -1,6 +1,6 @@
 'use strict';
 
-import config from 'modernMean/config';
+import { config } from '../config/config';
 import jwt from 'jsonwebtoken';
 import lodash from 'lodash';
 

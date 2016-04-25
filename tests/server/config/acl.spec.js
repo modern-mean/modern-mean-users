@@ -1,8 +1,7 @@
 'use strict';
 
 import * as aclModule from '../../../server/config/acl';
-import mongooseModule from '../../../../core/server/app/mongoose';
-import config from 'modernMean/config';
+import mongooseModule from 'modern-mean-core-material/dist/server/app/mongoose';
 
 let sandbox;
 
@@ -26,8 +25,12 @@ describe('/modules/users/server/config/acl.js', () => {
       return aclModule.init.should.be.a('function');
     });
 
-    it('should export getAcl', () => {
-      return aclModule.init.should.be.a('function');
+    it('should export get', () => {
+      return aclModule.get.should.be.a('function');
+    });
+
+    it('should export destroy', () => {
+      return aclModule.destroy.should.be.a('function');
     });
 
   });

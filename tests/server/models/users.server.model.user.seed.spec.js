@@ -2,7 +2,7 @@
 
 import * as userSeed from '../../../server/models/users.server.model.user.seed';
 import userModel from '../../../server/models/users.server.model.user';
-import mongooseModule from '../../../../core/server/app/mongoose';
+import mongooseModule from 'modern-mean-core-material/dist/server/app/mongoose';
 import aclModule from '../../../server/config/acl';
 
 let sandbox;

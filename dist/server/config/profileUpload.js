@@ -9,9 +9,7 @@ var _multer = require('multer');
 
 var _multer2 = _interopRequireDefault(_multer);
 
-var _config = require('modernMean/config');
-
-var _config2 = _interopRequireDefault(_config);
+var _config = require('./config');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -30,7 +28,7 @@ function storage() {
 }
 
 function destination(req, file, cb) {
-  cb(null, _config2.default.uploads.profileUpload.dest);
+  cb(null, _config.config.uploads.profile.destination);
 }
 
 function filename(req, file, cb) {

@@ -13,9 +13,9 @@ var _passport = require('passport');
 
 var _passport2 = _interopRequireDefault(_passport);
 
-var _winston = require('winston');
+var _logger = require('../../config/logger');
 
-var _winston2 = _interopRequireDefault(_winston);
+var _logger2 = _interopRequireDefault(_logger);
 
 var _usersServerModel = require('../../models/users.server.model.user');
 
@@ -27,7 +27,7 @@ let LocalStrategy = require('passport-local').Strategy;
 
 function strategy() {
   return new Promise(function (resolve, reject) {
-    _winston2.default.debug('Users::Authentication::Local::Start');
+    _logger2.default.debug('Users::Authentication::Local::Start');
     // Use local strategy
     _passport2.default.use(new LocalStrategy({
       usernameField: 'email',
@@ -50,7 +50,7 @@ function strategy() {
         return done(err, false);
       });
     }));
-    _winston2.default.verbose('Users::Authentication::Local::Success');
+    _logger2.default.verbose('Users::Authentication::Local::Success');
     return resolve();
   });
 }

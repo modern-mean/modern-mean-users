@@ -1,6 +1,6 @@
 'use strict';
 
-import mongoose from 'mongoose';
+import { mongoose } from 'modern-mean-core-material/dist/server/app/mongoose';
 import crypto from 'crypto';
 import validator from 'validator';
 import generatePassword from 'generate-password';

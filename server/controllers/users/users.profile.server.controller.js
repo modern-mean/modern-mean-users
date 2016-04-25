@@ -2,7 +2,7 @@
 
 import lodash from 'lodash';
 import multer from 'multer';
-import config from 'modernMean/config';
+import { config } from '../../config/config';
 
 function addresses(req, res) {
   let user = req.user;
@@ -20,7 +20,7 @@ function addresses(req, res) {
 function changeProfilePicture(req, res) {
 
   var user = req.user;
-  user.profileImageURL = './img/profile/uploads/' + req.file.filename;
+  user.profileImageURL = config.uploads.profile.public + req.file.filename;
   return user.save()
     .then(user => {
       res.json(user);

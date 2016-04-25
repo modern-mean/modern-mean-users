@@ -9,9 +9,7 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _mongoose = require('mongoose');
-
-var _mongoose2 = _interopRequireDefault(_mongoose);
+var _mongoose = require('modern-mean-core-material/dist/server/app/mongoose');
 
 var _usersServerModel = require('../models/users.server.model.user');
 
@@ -57,7 +55,7 @@ function list(req, res) {
 
 function userByID(req, res, next, id) {
 
-  if (!_mongoose2.default.Types.ObjectId.isValid(id)) {
+  if (!_mongoose.mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json('User is invalid');
   }
 

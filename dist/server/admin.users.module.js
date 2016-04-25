@@ -5,9 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.init = undefined;
 
-var _winston = require('winston');
+var _logger = require('./config/logger');
 
-var _winston2 = _interopRequireDefault(_winston);
+var _logger2 = _interopRequireDefault(_logger);
 
 var _adminServer = require('./routes/admin.server.routes');
 
@@ -25,17 +25,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function init(app) {
   return new Promise(function (resolve, reject) {
-    _winston2.default.debug('UsersAdmin::Init::Start');
+    _logger2.default.debug('UsersAdmin::Init::Start');
     _acl2.default.init().then(_adminServer4.default.policy).then(() => {
       _adminServer2.default.init(app).then(() => {
-        _winston2.default.verbose('UsersAdmin::Routes::Success');
+        _logger2.default.verbose('UsersAdmin::Routes::Success');
         return resolve(app);
       }).catch(err => {
-        _winston2.default.error(err);
+        _logger2.default.error(err);
         return reject(err);
       });
     }).catch(err => {
-      _winston2.default.error(err);
+      _logger2.default.error(err);
       return reject(err);
     });
   });

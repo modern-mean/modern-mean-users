@@ -1,6 +1,6 @@
 'use strict';
 
-import express from 'express';
+import expressModule from 'modern-mean-core-material/dist/server/app/express';
 import passport from 'passport';
 import * as authentication from '../../../server/authentication/authentication';
 import jwtStrategy from '../../../server/authentication/strategies/jwt';
@@ -10,6 +10,14 @@ let sandbox;
 
 describe('/modules/users/server/authentication/authentication.js', () => {
 
+  before(() => {
+    return expressModule.init();
+  });
+
+  after(() => {
+    return expressModule.destroy();
+  });
+
   beforeEach(() => {
     return sandbox = sinon.sandbox.create();
   });
@@ -17,6 +25,7 @@ describe('/modules/users/server/authentication/authentication.js', () => {
   afterEach(() => {
     return sandbox.restore();
   });
+
 
   describe('export', () => {
 
@@ -34,7 +43,7 @@ describe('/modules/users/server/authentication/authentication.js', () => {
       describe('success', () => {
 
         beforeEach(() => {
-          app = express();
+          app = expressModule.getExpressApp();
           jwtSpy = sandbox.spy(jwtStrategy, 'strategy');
           passportSpy = sandbox.spy(passport, 'initialize');
         });
@@ -63,7 +72,7 @@ describe('/modules/users/server/authentication/authentication.js', () => {
         let mockStrategy;
 
         beforeEach(() => {
-          app = express();
+          app = expressModule.getExpressApp();
           mockStrategy = sandbox.stub(jwtStrategy, 'strategy').rejects();
         });
 

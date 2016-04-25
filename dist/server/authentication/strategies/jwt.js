@@ -9,13 +9,11 @@ var _passport = require('passport');
 
 var _passport2 = _interopRequireDefault(_passport);
 
-var _config = require('modernMean/config');
+var _config = require('../../config/config');
 
-var _config2 = _interopRequireDefault(_config);
+var _logger = require('../../config/logger');
 
-var _winston = require('winston');
-
-var _winston2 = _interopRequireDefault(_winston);
+var _logger2 = _interopRequireDefault(_logger);
 
 var _passportJwt = require('passport-jwt');
 
@@ -32,9 +30,9 @@ let extract = _passportJwt2.default.ExtractJwt;
 
 function strategy() {
   return new Promise(function (resolve, reject) {
-    _winston2.default.debug('Users::Authentication::JWT::Start');
+    _logger2.default.debug('Users::Authentication::JWT::Start');
     var opts = {};
-    opts.secretOrKey = _config2.default.jwt.secret;
+    opts.secretOrKey = _config.config.jwt.secret;
     opts.jwtFromRequest = extract.fromAuthHeader();
 
     _passport2.default.use(new jwtStrategy(opts, function (jwt_payload, done) {
@@ -49,7 +47,7 @@ function strategy() {
         return done(err, false);
       });
     }));
-    _winston2.default.verbose('Users::Authentication::Jwt::Success');
+    _logger2.default.verbose('Users::Authentication::Jwt::Success');
     return resolve();
   });
 }

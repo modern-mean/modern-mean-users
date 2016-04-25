@@ -1,6 +1,6 @@
 'use strict';
 
-import express from 'express';
+import { express } from 'modern-mean-core-material/dist/server/app/express';
 import * as authRoutes from '../../../server/routes/auth.server.routes.js';
 import userController from '../../../server/controllers/users.server.controller';
 import userModel from '../../../server/models/users.server.model.user';

@@ -1,8 +1,7 @@
 'use strict';
 
 import chalk from 'chalk';
-import winston from 'winston';
-import config from 'modernMean/config';
+import logger from '../config/logger';
 import userModel from './users.server.model.user';
 import aclModule from '../config/acl.js';
 
@@ -55,7 +54,7 @@ function getUser(template) {
 
 function seedUser() {
   return new Promise((resolve, reject) => {
-
+    logger.debug('Users::Model::Seed::User::Start');
     let LocalProvider = userModel.getModels().provider;
     let Email = userModel.getModels().email;
 
@@ -99,22 +98,28 @@ function seedUser() {
         });
 
         user.providers.push(provider);
+        logger.debug('Users::Model::Seed::User::PreSave');
         user.save()
           .then(() => {
-
-            aclModule.getAcl().addUserRoles(user._id.toString(), 'user');
-            users.user = user.toObject();
-            users.user.password = password;
-            winston.info('Users::Model::Seed::User::' + chalk.bold.magenta(user.emails[0].email + ':' + password));
-            resolve(user);
-          });
-          /*
-          Commented out till i figure out how to mock it.
+            aclModule
+              .get()
+              .addUserRoles(user._id.toString(), ['user'])
+              .then(() => {
+                users.user = user.toObject();
+                users.user.password = password;
+                logger.info('Users::Model::Seed::User::' + chalk.bold.magenta(user.emails[0].email + ':' + password));
+                resolve(user);
+              })
+              .catch(err => {
+                console.log(chalk.bold.red('Users::Model::Seed::User::Role::Error::' + err));
+                reject(err);
+              });
+          })
           .catch(err => {
             console.log(chalk.bold.red('Users::Model::Seed::User::Error::' + err));
             reject(err);
           });
-          */
+
 
 
       });
@@ -157,19 +162,25 @@ function seedAdmin() {
 
         user.save()
           .then(() => {
-            aclModule.getAcl().addUserRoles(user._id.toString(), ['admin']);
-            users.admin = user.toObject();
-            users.admin.password = password;
-            winston.info('Users::Model::Seed::User::' + chalk.bold.magenta(user.emails[0].email + ':' + password));
-            resolve(user);
-          });
-          /*
-          Commented out till i figure out how to mock it.
+            aclModule
+              .get()
+              .addUserRoles(user._id.toString(), ['admin'])
+              .then(() => {
+                users.admin = user.toObject();
+                users.admin.password = password;
+                logger.info('Users::Model::Seed::User::' + chalk.bold.magenta(user.emails[0].email + ':' + password));
+                resolve(user);
+              })
+              .catch(err => {
+                console.log(chalk.bold.red('Users::Model::Seed::Admin::Role::Error::' + err));
+                reject(err);
+              });
+
+          })
           .catch(err => {
             console.log(chalk.bold.red('Users::Model::Seed::Admin::Error::' + err));
             reject(err);
           });
-          */
 
       });
   });
@@ -182,20 +193,18 @@ function init() {
       return resolve(users);
     }
 
-    winston.debug('Users::Model::Seed::Start');
+    logger.debug('Users::Model::Seed::Start');
     seedUser()
       .then(seedAdmin)
       .then(() => {
-        winston.verbose('Users::Model::Seed::Success');
+        logger.verbose('Users::Model::Seed::Success');
         resolve(users);
-      });
-      /*
-      Commented out till i figure out how to mock it.
+      })
       .catch((err) => {
         console.log(chalk.bold.red('Users::Model::Seed::Error::' + err));
         reject(err);
       });
-      */
+
 
   });
 }

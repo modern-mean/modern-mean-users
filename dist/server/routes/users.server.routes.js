@@ -9,13 +9,11 @@ var _passport = require('passport');
 
 var _passport2 = _interopRequireDefault(_passport);
 
-var _express = require('express');
+var _express = require('modern-mean-core-material/dist/server/app/express');
 
-var _express2 = _interopRequireDefault(_express);
+var _logger = require('../config/logger');
 
-var _winston = require('winston');
-
-var _winston2 = _interopRequireDefault(_winston);
+var _logger2 = _interopRequireDefault(_logger);
 
 var _multer = require('multer');
 
@@ -31,8 +29,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function init(app) {
   return new Promise((resolve, reject) => {
-    _winston2.default.debug('Users::Routes::Start');
-    let router = _express2.default.Router();
+    _logger2.default.debug('Users::Routes::Start');
+    let router = _express.express.Router();
 
     let upload = (0, _multer2.default)({
       storage: _profileUpload2.default.storage(),
@@ -54,7 +52,7 @@ function init(app) {
     router.route('/picture').post(upload.single('newProfilePicture'), _usersServer.profile.changeProfilePicture);
 
     app.use('/api/me', router);
-    _winston2.default.verbose('Users::Routes::Success');
+    _logger2.default.verbose('Users::Routes::Success');
     return resolve(app);
   });
 }

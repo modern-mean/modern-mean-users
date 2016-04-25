@@ -1,6 +1,6 @@
 'use strict';
 
-import mongoose from 'mongoose';
+import { mongoose } from 'modern-mean-core-material/dist/server/app/mongoose';
 import lodash from 'lodash';
 import * as profileController from '../../../../server/controllers/users/users.profile.server.controller';
 import userModel from '../../../../server/models/users.server.model.user';
@@ -122,7 +122,7 @@ describe('/modules/users/server/controllers/users/users.profile.server.controlle
         });
 
         it('should change the users profile picture', () => {
-          user.profileImageURL.should.be.equal('./img/profile/uploads/56c287d70b9db2e01edf8ee2-1458594382467.png');
+          user.profileImageURL.should.be.equal(config.config.uploads.profile.public + '56c287d70b9db2e01edf8ee2-1458594382467.png');
           return mockUser.should.have.been.called;
         });
 

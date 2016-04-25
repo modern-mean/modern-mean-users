@@ -1,21 +1,21 @@
 'use strict';
 
-import express from 'express';
+import { express } from 'modern-mean-core-material/dist/server/app/express';
 import passport from 'passport';
-import winston from 'winston';
+import logger from '../config/logger';
 import { authentication } from '../controllers/users.server.controller';
 import userModel from '../models/users.server.model.user';
 
 function init(app) {
   return new Promise(function (resolve, reject) {
-    winston.debug('Users::Routes::Authentication::Start');
+    logger.debug('Users::Routes::Authentication::Start');
     let router = express.Router();
 
     router.route('/signup').post(userModel.create, authentication.signup);
     router.route('/signin').post(passport.authenticate('local', { session: false }), authentication.signin);
 
     app.use('/api/auth', router);
-    winston.verbose('Users::Routes::Authentication::Success');
+    logger.verbose('Users::Routes::Authentication::Success');
     return resolve(app);
   });
 }
