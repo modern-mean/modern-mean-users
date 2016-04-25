@@ -4,6 +4,7 @@ import gulp from 'gulp';
 import babel from 'gulp-babel';
 import concat from 'gulp-concat';
 import coveralls from 'gulp-coveralls';
+import debug from 'gulp-debug';
 import eslint from 'gulp-eslint';
 import filter from 'gulp-filter';
 import del from 'del';
@@ -25,7 +26,8 @@ function setTest() {
 
 function clean() {
   return del([
-    './dist'
+    './dist',
+    'tests/.coverage'
   ]);
 }
 clean.displayName = 'clean';
