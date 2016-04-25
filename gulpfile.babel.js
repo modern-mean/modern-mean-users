@@ -3,6 +3,7 @@
 import gulp from 'gulp';
 import babel from 'gulp-babel';
 import concat from 'gulp-concat';
+import coveralls from 'gulp-coveralls';
 import eslint from 'gulp-eslint';
 import filter from 'gulp-filter';
 import del from 'del';
@@ -58,7 +59,7 @@ gulp.task(vendor);
 function templates() {
   return gulp.src(['./client/**/*.html'])
     .pipe(templateCache({
-      root: 'modern-mean-users/',
+      root: 'modern-mean-users-material/',
       module: 'users'
     }))
     .pipe(gulp.dest('./dist/client'));
@@ -131,6 +132,26 @@ testServerSingle.displayName = 'test:server';
 gulp.task(testServerSingle);
 
 
+function testClientSingle(done) {
+  process.env.NODE_ENV = 'test';
+  new KarmaServer({
+    configFile: process.cwd() + '/tests/karma.conf.js',
+    singleRun: true
+  }, done).start();
+}
+testClientSingle.displayName = 'test:client';
+gulp.task(testClientSingle);
+
+function sendCoveralls() {
+  return gulp.src('tests/.coverage/**/lcov.info')
+    .pipe(debug())
+    .pipe(concat('lcov.info'))
+    .pipe(coveralls());
+}
+sendCoveralls.displayName = 'coveralls';
+gulp.task(sendCoveralls);
+
+
 //Gulp Default
 var defaultTask = gulp.series(clean, gulp.parallel(images, templates, client, vendor, server));
 defaultTask.displayName = 'default';
@@ -140,3 +161,8 @@ gulp.task(defaultTask);
 var lint = gulp.series(lint);
 lint.displayName = 'lint';
 gulp.task(lint);
+
+//Gulp Test
+var testTask = gulp.series(clean, defaultTask, lint, testClientSingle, testServerSingle);
+testTask.displayName = 'test';
+gulp.task(testTask);

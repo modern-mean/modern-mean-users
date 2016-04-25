@@ -7,7 +7,7 @@
       $httpBackend,
       $state;
 
-    beforeEach(module('users.routes'));
+    beforeEach(module('users'));
 
 
     beforeEach(inject(function(_$rootScope_, _$httpBackend_, _Authentication_, _$state_) {

@@ -18,7 +18,7 @@
         },
         views: {
           'main@': {
-            templateUrl: 'modules/users/client/views/admin/users.client.views.admin.grid.html'
+            templateUrl: 'modern-mean-users-material/views/admin/users.client.views.admin.grid.html'
           }
         }
       })
@@ -29,7 +29,7 @@
         },
         views: {
           'row-1-col-1': {
-            templateUrl: 'modules/users/client/views/cards/users.client.views.cards.admin.users.html'
+            templateUrl: 'modern-mean-users-material/views/cards/users.client.views.cards.admin.users.html'
           }
         }
       })
@@ -37,7 +37,7 @@
         url: '/users',
         views: {
           'main@': {
-            templateUrl: 'modules/users/client/views/admin/users.client.views.list-users.html',
+            templateUrl: 'modern-mean-users-material/views/admin/users.client.views.list-users.html',
             controller: 'UserListController',
             controllerAs: 'vm'
           }
@@ -47,7 +47,7 @@
         url: '/users/:userId',
         views: {
           'main@': {
-            templateUrl: 'modules/users/client/views/admin/users.client.views.view-user.html',
+            templateUrl: 'modern-mean-users-material/views/admin/users.client.views.view-user.html',
             controller: 'UserController',
             controllerAs: 'vm',
             resolve: {
@@ -60,7 +60,7 @@
         url: '/users/:userId/edit',
         views: {
           'main@': {
-            templateUrl: 'modules/users/client/views/admin/users.client.views.edit-user.html',
+            templateUrl: 'modern-mean-users-material/views/admin/users.client.views.edit-user.html',
             controller: 'UserController',
             controllerAs: 'vm',
             resolve: {

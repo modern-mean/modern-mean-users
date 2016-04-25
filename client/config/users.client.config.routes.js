@@ -19,7 +19,7 @@
         },
         views: {
           'main@': {
-            templateUrl: 'modules/users/client/views/settings/users.client.views.settings.grid.html'
+            templateUrl: 'modern-mean-users-material/views/settings/users.client.views.settings.grid.html'
           }
         }
       })
@@ -27,27 +27,27 @@
         url: '/settings',
         views: {
           'address': {
-            templateUrl: 'modules/users/client/views/cards/users.client.views.cards.addresses.html',
+            templateUrl: 'modern-mean-users-material/views/cards/users.client.views.cards.addresses.html',
             controller: 'UsersAddressController',
             controllerAs: 'vm'
           },
           'email': {
-            templateUrl: 'modules/users/client/views/cards/users.client.views.cards.emails.html',
+            templateUrl: 'modern-mean-users-material/views/cards/users.client.views.cards.emails.html',
             controller: 'UsersEmailController',
             controllerAs: 'vm'
           },
           'profile': {
-            templateUrl: 'modules/users/client/views/cards/users.client.views.cards.profile.html',
+            templateUrl: 'modern-mean-users-material/views/cards/users.client.views.cards.profile.html',
             controller: 'UsersProfileController',
             controllerAs: 'vm'
           },
           'password': {
-            templateUrl: 'modules/users/client/views/cards/users.client.views.cards.password.html',
+            templateUrl: 'modern-mean-users-material/views/cards/users.client.views.cards.password.html',
             controller: 'UsersPasswordController',
             controllerAs: 'vm',
           },
           'picture': {
-            templateUrl: 'modules/users/client/views/cards/users.client.views.cards.picture.html',
+            templateUrl: 'modern-mean-users-material/views/cards/users.client.views.cards.picture.html',
             controller: 'UsersPictureController',
             controllerAs: 'vm'
           }
@@ -58,7 +58,7 @@
         url: '/authentication',
         views: {
           'main@': {
-            templateUrl: 'modules/users/client/views/authentication/users.client.views.authentication.html',
+            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.html',
           }
         }
       })
@@ -66,12 +66,12 @@
         url: '/signup',
         views: {
           'social': {
-            templateUrl: 'modules/users/client/views/authentication/users.client.views.authentication.social.html',
+            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.social.html',
             controller: 'SocialAuthenticationController',
             controllerAs: 'vm'
           },
           'auth': {
-            templateUrl: 'modules/users/client/views/authentication/users.client.views.authentication.signup.html',
+            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.signup.html',
             controller: 'SignupAuthenticationController',
             controllerAs: 'vm'
           }
@@ -85,12 +85,12 @@
         url: '/signin',
         views: {
           'social': {
-            templateUrl: 'modules/users/client/views/authentication/users.client.views.authentication.social.html',
+            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.social.html',
             controller: 'SocialAuthenticationController',
             controllerAs: 'vm'
           },
           'auth': {
-            templateUrl: 'modules/users/client/views/authentication/users.client.views.authentication.signin.html',
+            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.signin.html',
             controller: 'SigninAuthenticationController',
             controllerAs: 'vm'
           }
@@ -108,7 +108,7 @@
         url: '/forgot',
         views: {
           'main@': {
-            templateUrl: 'modules/users/client/views/password/users.client.views.forgot-password.html',
+            templateUrl: 'modern-mean-users-material/views/password/users.client.views.forgot-password.html',
             controller: 'PasswordController',
             controllerAs: 'vm'
           }
@@ -125,7 +125,7 @@
         url: '/invalid',
         views: {
           'main@': {
-            templateUrl: 'modules/users/client/views/password/users.client.views.reset-password-invalid.html'
+            templateUrl: 'modern-mean-users-material/views/password/users.client.views.reset-password-invalid.html'
           }
         }
       })
@@ -133,7 +133,7 @@
         url: '/success',
         views: {
           'main@': {
-            templateUrl: 'modules/users/client/views/password/users.client.views.reset-password-success.html'
+            templateUrl: 'modern-mean-users-material/views/password/users.client.views.reset-password-success.html'
           }
         }
       })
@@ -141,7 +141,7 @@
         url: '/:token',
         views: {
           'main@': {
-            templateUrl: 'modules/users/client/views/password/users.client.views.reset-password.html',
+            templateUrl: 'modern-mean-users-material/views/password/users.client.views.reset-password.html',
             controller: 'PasswordController',
             controllerAs: 'vm'
           }

@@ -20,13 +20,13 @@
 
       it('should override the core right nav', function () {
         var rootState = $state.get('root');
-        expect(rootState.views.rightnav.templateUrl).to.equal('modules/users/client/views/navigation/users.client.views.navigation.rightnav.html');
+        expect(rootState.views.rightnav.templateUrl).to.equal('modern-mean-users-material/views/navigation/users.client.views.navigation.rightnav.html');
         expect(rootState.views.rightnav.controller).to.equal('UsersRightNavController');
       });
 
       it('should override the core header', function () {
         var rootState = $state.get('root');
-        expect(rootState.views.header.templateUrl).to.equal('modules/users/client/views/navigation/users.client.views.navigation.header.html');
+        expect(rootState.views.header.templateUrl).to.equal('modern-mean-users-material/views/navigation/users.client.views.navigation.header.html');
         expect(rootState.views.header.controller).to.equal('UsersHeaderController');
       });
 

@@ -19,7 +19,7 @@
     it('should have created the users.admin module', function () {
       expect(angular.module('users.admin')).to.be.an('object');
       expect(angular.module('users.admin').name).to.equal('users.admin');
-      expect(angular.module('users.admin').requires.length).to.equal(0);
+      expect(angular.module('users.admin').requires.length).to.equal(1);
     });
 
     it('should have created the users.routes module', function () {

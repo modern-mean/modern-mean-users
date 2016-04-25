@@ -3,7 +3,7 @@
 
   app.registerModule('users', ['core', 'ngFileUpload']);
   app.registerModule('users.routes', ['core.routes']);
-  app.registerModule('users.admin', []);
+  app.registerModule('users.admin', ['core']);
   app.registerModule('users.admin.routes', ['core.routes']);
 
 })(window.modernMeanApplication);
@@ -42,7 +42,7 @@
         },
         views: {
           'main@': {
-            templateUrl: 'modules/users/client/views/admin/users.client.views.admin.grid.html'
+            templateUrl: 'modern-mean-users-material/views/admin/users.client.views.admin.grid.html'
           }
         }
       })
@@ -53,7 +53,7 @@
         },
         views: {
           'row-1-col-1': {
-            templateUrl: 'modules/users/client/views/cards/users.client.views.cards.admin.users.html'
+            templateUrl: 'modern-mean-users-material/views/cards/users.client.views.cards.admin.users.html'
           }
         }
       })
@@ -61,7 +61,7 @@
         url: '/users',
         views: {
           'main@': {
-            templateUrl: 'modules/users/client/views/admin/users.client.views.list-users.html',
+            templateUrl: 'modern-mean-users-material/views/admin/users.client.views.list-users.html',
             controller: 'UserListController',
             controllerAs: 'vm'
           }
@@ -71,7 +71,7 @@
         url: '/users/:userId',
         views: {
           'main@': {
-            templateUrl: 'modules/users/client/views/admin/users.client.views.view-user.html',
+            templateUrl: 'modern-mean-users-material/views/admin/users.client.views.view-user.html',
             controller: 'UserController',
             controllerAs: 'vm',
             resolve: {
@@ -84,7 +84,7 @@
         url: '/users/:userId/edit',
         views: {
           'main@': {
-            templateUrl: 'modules/users/client/views/admin/users.client.views.edit-user.html',
+            templateUrl: 'modern-mean-users-material/views/admin/users.client.views.edit-user.html',
             controller: 'UserController',
             controllerAs: 'vm',
             resolve: {
@@ -123,7 +123,7 @@
         },
         views: {
           'main@': {
-            templateUrl: 'modules/users/client/views/settings/users.client.views.settings.grid.html'
+            templateUrl: 'modern-mean-users-material/views/settings/users.client.views.settings.grid.html'
           }
         }
       })
@@ -131,27 +131,27 @@
         url: '/settings',
         views: {
           'address': {
-            templateUrl: 'modules/users/client/views/cards/users.client.views.cards.addresses.html',
+            templateUrl: 'modern-mean-users-material/views/cards/users.client.views.cards.addresses.html',
             controller: 'UsersAddressController',
             controllerAs: 'vm'
           },
           'email': {
-            templateUrl: 'modules/users/client/views/cards/users.client.views.cards.emails.html',
+            templateUrl: 'modern-mean-users-material/views/cards/users.client.views.cards.emails.html',
             controller: 'UsersEmailController',
             controllerAs: 'vm'
           },
           'profile': {
-            templateUrl: 'modules/users/client/views/cards/users.client.views.cards.profile.html',
+            templateUrl: 'modern-mean-users-material/views/cards/users.client.views.cards.profile.html',
             controller: 'UsersProfileController',
             controllerAs: 'vm'
           },
           'password': {
-            templateUrl: 'modules/users/client/views/cards/users.client.views.cards.password.html',
+            templateUrl: 'modern-mean-users-material/views/cards/users.client.views.cards.password.html',
             controller: 'UsersPasswordController',
             controllerAs: 'vm',
           },
           'picture': {
-            templateUrl: 'modules/users/client/views/cards/users.client.views.cards.picture.html',
+            templateUrl: 'modern-mean-users-material/views/cards/users.client.views.cards.picture.html',
             controller: 'UsersPictureController',
             controllerAs: 'vm'
           }
@@ -162,7 +162,7 @@
         url: '/authentication',
         views: {
           'main@': {
-            templateUrl: 'modules/users/client/views/authentication/users.client.views.authentication.html',
+            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.html',
           }
         }
       })
@@ -170,12 +170,12 @@
         url: '/signup',
         views: {
           'social': {
-            templateUrl: 'modules/users/client/views/authentication/users.client.views.authentication.social.html',
+            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.social.html',
             controller: 'SocialAuthenticationController',
             controllerAs: 'vm'
           },
           'auth': {
-            templateUrl: 'modules/users/client/views/authentication/users.client.views.authentication.signup.html',
+            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.signup.html',
             controller: 'SignupAuthenticationController',
             controllerAs: 'vm'
           }
@@ -189,12 +189,12 @@
         url: '/signin',
         views: {
           'social': {
-            templateUrl: 'modules/users/client/views/authentication/users.client.views.authentication.social.html',
+            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.social.html',
             controller: 'SocialAuthenticationController',
             controllerAs: 'vm'
           },
           'auth': {
-            templateUrl: 'modules/users/client/views/authentication/users.client.views.authentication.signin.html',
+            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.signin.html',
             controller: 'SigninAuthenticationController',
             controllerAs: 'vm'
           }
@@ -212,7 +212,7 @@
         url: '/forgot',
         views: {
           'main@': {
-            templateUrl: 'modules/users/client/views/password/users.client.views.forgot-password.html',
+            templateUrl: 'modern-mean-users-material/views/password/users.client.views.forgot-password.html',
             controller: 'PasswordController',
             controllerAs: 'vm'
           }
@@ -229,7 +229,7 @@
         url: '/invalid',
         views: {
           'main@': {
-            templateUrl: 'modules/users/client/views/password/users.client.views.reset-password-invalid.html'
+            templateUrl: 'modern-mean-users-material/views/password/users.client.views.reset-password-invalid.html'
           }
         }
       })
@@ -237,7 +237,7 @@
         url: '/success',
         views: {
           'main@': {
-            templateUrl: 'modules/users/client/views/password/users.client.views.reset-password-success.html'
+            templateUrl: 'modern-mean-users-material/views/password/users.client.views.reset-password-success.html'
           }
         }
       })
@@ -245,7 +245,7 @@
         url: '/:token',
         views: {
           'main@': {
-            templateUrl: 'modules/users/client/views/password/users.client.views.reset-password.html',
+            templateUrl: 'modern-mean-users-material/views/password/users.client.views.reset-password.html',
             controller: 'PasswordController',
             controllerAs: 'vm'
           }
@@ -489,9 +489,9 @@
   function navigationConfig($state, $log) {
 
     var rootState = $state.get('root');
-    rootState.views.rightnav.templateUrl = 'modules/users/client/views/navigation/users.client.views.navigation.rightnav.html';
+    rootState.views.rightnav.templateUrl = 'modern-mean-users-material/views/navigation/users.client.views.navigation.rightnav.html';
     rootState.views.rightnav.controller = 'UsersRightNavController';
-    rootState.views.header.templateUrl = 'modules/users/client/views/navigation/users.client.views.navigation.header.html';
+    rootState.views.header.templateUrl = 'modern-mean-users-material/views/navigation/users.client.views.navigation.header.html';
     rootState.views.header.controller = 'UsersHeaderController';
 
     $log.info('Users::navigationConfig::Init', rootState);

@@ -61,28 +61,28 @@
 
         it('should have property email', function () {
           expect(state.views).to.include.keys('email');
-          expect(state.views['email'].templateUrl).to.equal('modules/users/client/views/cards/users.client.views.cards.emails.html');
+          expect(state.views['email'].templateUrl).to.equal('modern-mean-users-material/views/cards/users.client.views.cards.emails.html');
           expect(state.views['email'].controller).to.equal('UsersEmailController');
           expect(state.views['email'].controllerAs).to.equal('vm');
         });
 
         it('should have property profile', function () {
           expect(state.views).to.include.keys('profile');
-          expect(state.views['profile'].templateUrl).to.equal('modules/users/client/views/cards/users.client.views.cards.profile.html');
+          expect(state.views['profile'].templateUrl).to.equal('modern-mean-users-material/views/cards/users.client.views.cards.profile.html');
           expect(state.views['profile'].controller).to.equal('UsersProfileController');
           expect(state.views['profile'].controllerAs).to.equal('vm');
         });
 
         it('should have property password', function () {
           expect(state.views).to.include.keys('password');
-          expect(state.views['password'].templateUrl).to.equal('modules/users/client/views/cards/users.client.views.cards.password.html');
+          expect(state.views['password'].templateUrl).to.equal('modern-mean-users-material/views/cards/users.client.views.cards.password.html');
           expect(state.views['password'].controller).to.equal('UsersPasswordController');
           expect(state.views['password'].controllerAs).to.equal('vm');
         });
 
         it('should have property picture', function () {
           expect(state.views).to.include.keys('picture');
-          expect(state.views['picture'].templateUrl).to.equal('modules/users/client/views/cards/users.client.views.cards.picture.html');
+          expect(state.views['picture'].templateUrl).to.equal('modern-mean-users-material/views/cards/users.client.views.cards.picture.html');
           expect(state.views['picture'].controller).to.equal('UsersPictureController');
           expect(state.views['picture'].controllerAs).to.equal('vm');
         });
@@ -117,7 +117,7 @@
       describe('main@', function () {
 
         it('should have property templateUrl', function () {
-          expect(state.views['main@'].templateUrl).to.equal('modules/users/client/views/authentication/users.client.views.authentication.html');
+          expect(state.views['main@'].templateUrl).to.equal('modern-mean-users-material/views/authentication/users.client.views.authentication.html');
         });
 
       });
@@ -162,7 +162,7 @@
       describe('auth view', function () {
 
         it('should have property templateUrl', function () {
-          expect(state.views['auth'].templateUrl).to.equal('modules/users/client/views/authentication/users.client.views.authentication.signup.html');
+          expect(state.views['auth'].templateUrl).to.equal('modern-mean-users-material/views/authentication/users.client.views.authentication.signup.html');
         });
 
         it('should have property controller', function () {
@@ -182,7 +182,7 @@
       describe('social view', function () {
 
         it('should have property templateUrl', function () {
-          expect(state.views['social'].templateUrl).to.equal('modules/users/client/views/authentication/users.client.views.authentication.social.html');
+          expect(state.views['social'].templateUrl).to.equal('modern-mean-users-material/views/authentication/users.client.views.authentication.social.html');
         });
 
         it('should have property controller', function () {
@@ -234,7 +234,7 @@
       describe('auth view', function () {
 
         it('should have property templateUrl', function () {
-          expect(state.views['auth'].templateUrl).to.equal('modules/users/client/views/authentication/users.client.views.authentication.signin.html');
+          expect(state.views['auth'].templateUrl).to.equal('modern-mean-users-material/views/authentication/users.client.views.authentication.signin.html');
         });
 
         it('should have property controller', function () {
@@ -254,7 +254,7 @@
       describe('social view', function () {
 
         it('should have property templateUrl', function () {
-          expect(state.views['social'].templateUrl).to.equal('modules/users/client/views/authentication/users.client.views.authentication.social.html');
+          expect(state.views['social'].templateUrl).to.equal('modern-mean-users-material/views/authentication/users.client.views.authentication.social.html');
         });
 
         it('should have property controller', function () {
@@ -319,7 +319,7 @@
       describe('main@', function () {
 
         it('should have property templateUrl', function () {
-          expect(state.views['main@'].templateUrl).to.equal('modules/users/client/views/password/users.client.views.forgot-password.html');
+          expect(state.views['main@'].templateUrl).to.equal('modern-mean-users-material/views/password/users.client.views.forgot-password.html');
         });
 
         it('should have property controller', function () {
@@ -376,7 +376,7 @@
       describe('main@', function () {
 
         it('should have property templateUrl', function () {
-          expect(state.views['main@'].templateUrl).to.equal('modules/users/client/views/password/users.client.views.reset-password-success.html');
+          expect(state.views['main@'].templateUrl).to.equal('modern-mean-users-material/views/password/users.client.views.reset-password-success.html');
         });
 
       });
@@ -413,7 +413,7 @@
       describe('main@', function () {
 
         it('should have property templateUrl', function () {
-          expect(state.views['main@'].templateUrl).to.equal('modules/users/client/views/password/users.client.views.reset-password.html');
+          expect(state.views['main@'].templateUrl).to.equal('modern-mean-users-material/views/password/users.client.views.reset-password.html');
         });
 
         it('should have property controller', function () {
