@@ -31,7 +31,7 @@ let UserSchema = new Schema({
   },
   profileImageURL: {
     type: String,
-    default: '/dist/img/users/client/img/profile/default.png'
+    default: '/dist/img/modern-mean-users-material/profile/default.png'
   },
   providers: [Provider],
   timestamps: {
