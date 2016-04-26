@@ -25,7 +25,7 @@ function init(app) {
         return resolve();
       })
       .catch(function (err) {
-        logger.error(err);
+        logger.error('Users::Init::Model::Error::' + err);
         return reject(err);
       });
   });
@@ -37,11 +37,11 @@ function init(app) {
       .then(userRoutes.init)
       .then(authRoutes.init)
       .then(function () {
-        logger.verbose('Users::Init::Success');
+        logger.verbose('Users::Init::Express::Success');
         return resolve(app);
       })
       .catch(function (err) {
-        logger.error('Users::Init::Error::' + err);
+        logger.error('Users::Init::Express::Error::' + err);
         return reject(err);
       });
   });

@@ -23,13 +23,31 @@ function setTest() {
   process.env.MEAN_CORE_MONGOOSE_DB = 'modern-mean-test';
 }
 
-
-function clean() {
+function cleanClient() {
   return del([
-    './dist',
-    'tests/.coverage'
+    './dist/client'
   ]);
 }
+cleanClient.displayName = 'clean:client';
+gulp.task(cleanClient);
+
+function cleanServer() {
+  return del([
+    './dist/server'
+  ]);
+}
+cleanServer.displayName = 'clean:server';
+gulp.task(cleanServer);
+
+function cleanCoverage() {
+  return del([
+    './tests/.coverage'
+  ]);
+}
+cleanCoverage.displayName = 'clean:coverage';
+gulp.task(cleanCoverage);
+
+let clean = gulp.parallel(cleanClient, cleanServer, cleanCoverage);
 clean.displayName = 'clean';
 gulp.task(clean);
 
@@ -40,14 +58,15 @@ function lint() {
     .pipe(eslint.failAfterError());
 }
 lint.displayName = 'lint';
+gulp.task(lint);
 
-function server() {
+function serverBabel() {
   return gulp.src(['./server/**/*.js'])
     .pipe(babel())
     .pipe(gulp.dest('./dist/server'));
 }
-server.displayName = 'server';
-gulp.task(server);
+serverBabel.displayName = 'babel';
+gulp.task(serverBabel);
 
 function vendor() {
   let bowerFiles = mainBowerFiles({ filter: ['**/*.js', '!**/angular.js'] });
@@ -69,7 +88,7 @@ function templates() {
 templates.displayName = 'templates';
 gulp.task(templates);
 
-function client() {
+function application() {
   let filterJS = filter(['**/*.js'], { restore: true }),
     filterCSS = filter(['**/*.css'], { restore: true });
 
@@ -82,8 +101,8 @@ function client() {
     .pipe(concat('application.css'))
     .pipe(gulp.dest('./dist/client'));
 }
-client.displayName = 'client';
-gulp.task(client);
+application.displayName = 'application';
+gulp.task(application);
 
 function images() {
   return gulp.src(['./client/**/*.{jpg,png,gif,ico}'])
@@ -153,18 +172,22 @@ function sendCoveralls() {
 sendCoveralls.displayName = 'coveralls';
 gulp.task(sendCoveralls);
 
+//Build Client
+let client = gulp.series(cleanClient, gulp.parallel(images, templates, application, vendor));
+client.displayName = 'client';
+gulp.task(client);
+
+//Build Server
+let server = gulp.series(cleanServer, gulp.parallel(serverBabel));
+server.displayName = 'server';
+gulp.task(server);
 
 //Gulp Default
-var defaultTask = gulp.series(clean, gulp.parallel(images, templates, client, vendor, server));
+let defaultTask = gulp.series(clean, gulp.parallel(client, server));
 defaultTask.displayName = 'default';
 gulp.task(defaultTask);
 
-//Lint test
-var lint = gulp.series(lint);
-lint.displayName = 'lint';
-gulp.task(lint);
-
 //Gulp Test
-var testTask = gulp.series(clean, defaultTask, lint, testClientSingle, testServerSingle);
+let testTask = gulp.series(clean, lint, defaultTask, testClientSingle, testServerSingle);
 testTask.displayName = 'test';
 gulp.task(testTask);

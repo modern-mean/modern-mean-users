@@ -7,14 +7,24 @@ import ProviderSchema from '../schemas/users.server.schema.provider';
 import EmailSchema from '../schemas/users.server.schema.email';
 import AddressSchema from '../schemas/users.server.schema.address';
 
-let models = {};
+let models;
+
+function getModels() {
+  return models;
+}
+
+function create(req, res, next) {
+  req.model = new models.user();
+  next();
+  return;
+}
 
 function init() {
   return new Promise(function (resolve, reject) {
     logger.debug('User::Model::Init::Start');
+    models = {};
     if (!models.user) {
       models.user = mongoose.model('User', UserSchema);
-      console.log('HERE!!!', models.user);
     }
 
     if (!models.provider) {
@@ -33,15 +43,10 @@ function init() {
   });
 }
 
-function getModels() {
-  return models;
+if (models === undefined) {
+  init();
 }
 
-function create(req, res, next) {
-  req.model = new models.user();
-  next();
-  return;
-}
 
 
 let userModel = { init: init, create: create, models: models, getModels: getModels };

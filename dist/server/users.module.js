@@ -49,7 +49,7 @@ function init(app) {
       _logger2.default.verbose('Users::Init::Model::Success');
       return resolve();
     }).catch(function (err) {
-      _logger2.default.error(err);
+      _logger2.default.error('Users::Init::Model::Error::' + err);
       return reject(err);
     });
   });
@@ -57,10 +57,10 @@ function init(app) {
   let expressInit = new Promise(function (resolve, reject) {
     _logger2.default.debug('Users::Init::Express::Start');
     _authentication2.default.init(app).then(_usersServer2.default.init).then(_authServer2.default.init).then(function () {
-      _logger2.default.verbose('Users::Init::Success');
+      _logger2.default.verbose('Users::Init::Express::Success');
       return resolve(app);
     }).catch(function (err) {
-      _logger2.default.error('Users::Init::Error::' + err);
+      _logger2.default.error('Users::Init::Express::Error::' + err);
       return reject(err);
     });
   });

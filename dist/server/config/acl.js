@@ -22,7 +22,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 let acl;
 
 function init() {
-  return new Promise((resolve, reject) => {
+  acl = new Promise((resolve, reject) => {
     _logger2.default.debug('User::Acl::Init::Start');
 
     _mongoose2.default.connect().then(db => {

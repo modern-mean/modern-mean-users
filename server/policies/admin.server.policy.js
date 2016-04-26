@@ -8,21 +8,25 @@ function policy() {
     logger.debug('Users::Policy::Admin::Start');
     aclModule
       .get()
-      .allow([{
-        roles: ['admin'],
-        allows: [{
-          resources: '/api/users',
-          permissions: '*'
-        }]
-      }])
-      .then(() => {
-        logger.verbose('Users::Routes::Admin::Success');
-        return resolve();
-      })
-      .catch(err => {
-        logger.error(err);
-        return reject(err.message);
+      .then(acl => {
+        acl.allow([{
+          roles: ['admin'],
+          allows: [{
+            resources: '/api/users',
+            permissions: '*'
+          }]
+        }])
+        .then(() => {
+          logger.verbose('Users::Routes::Admin::Success');
+          return resolve();
+        })
+        .catch(err => {
+          logger.error(err);
+          return reject(err.message);
+        });
       });
+
+
   });
 }
 

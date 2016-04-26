@@ -8,8 +8,8 @@ import aclModule from './config/acl';
 function init(app) {
   return new Promise(function(resolve, reject) {
     logger.debug('UsersAdmin::Init::Start');
-    aclModule.init()
-      .then(adminPolicy.policy)
+    
+    adminPolicy.policy()
       .then(() => {
         adminRoutes.init(app)
           .then(() => {

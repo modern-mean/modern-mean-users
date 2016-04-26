@@ -29,14 +29,24 @@ var _usersServerSchema8 = _interopRequireDefault(_usersServerSchema7);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-let models = {};
+let models;
+
+function getModels() {
+  return models;
+}
+
+function create(req, res, next) {
+  req.model = new models.user();
+  next();
+  return;
+}
 
 function init() {
   return new Promise(function (resolve, reject) {
     _logger2.default.debug('User::Model::Init::Start');
+    exports.models = models = {};
     if (!models.user) {
       models.user = _mongoose.mongoose.model('User', _usersServerSchema2.default);
-      console.log('HERE!!!', models.user);
     }
 
     if (!models.provider) {
@@ -55,14 +65,8 @@ function init() {
   });
 }
 
-function getModels() {
-  return models;
-}
-
-function create(req, res, next) {
-  req.model = new models.user();
-  next();
-  return;
+if (models === undefined) {
+  init();
 }
 
 let userModel = { init: init, create: create, models: models, getModels: getModels };

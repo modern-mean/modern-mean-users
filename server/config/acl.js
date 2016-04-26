@@ -5,7 +5,7 @@ import mongooseModule from 'modern-mean-core-material/dist/server/app/mongoose';
 let acl;
 
 function init() {
-  return new Promise((resolve, reject) => {
+  acl = new Promise((resolve, reject) => {
     logger.debug('User::Acl::Init::Start');
 
     mongooseModule

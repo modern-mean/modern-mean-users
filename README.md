@@ -24,7 +24,7 @@ If you are developing for the core module it is easier to put this repository in
 git clone https://github.com/modern-mean/modern-mean.git
 git clone https://github.com/modern-mean/users-material.git modern-mean/modules/modern-mean-users-material
 ```
-Or symlink
+Or symlink (Watching will not work until this issue is fixed https://github.com/paulmillr/chokidar/issues/419)
 ```sh
 git clone https://github.com/modern-mean/modern-mean.git
 git clone https://github.com/modern-mean/users-material.git modern-mean-users-material
@@ -32,4 +32,3 @@ cd modern-mean/modules
 ln -s ../../modern-mean-users-material .
 ```
 Then npm and bower install the packages.
-

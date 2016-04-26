@@ -26,7 +26,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function init(app) {
   return new Promise(function (resolve, reject) {
     _logger2.default.debug('UsersAdmin::Init::Start');
-    _acl2.default.init().then(_adminServer4.default.policy).then(() => {
+
+    _adminServer4.default.policy().then(() => {
       _adminServer2.default.init(app).then(() => {
         _logger2.default.verbose('UsersAdmin::Routes::Success');
         return resolve(app);

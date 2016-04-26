@@ -34,7 +34,7 @@ describe('/modules/users/server/policies/admin.server.policy.js', () => {
           mockAcl = {
             allow: sandbox.stub().resolves()
           };
-          aclStub = sandbox.stub(aclModule, 'get').returns(mockAcl);
+          aclStub = sandbox.stub(aclModule, 'get').resolves(mockAcl);
           promise = adminPolicy.policy();
           return promise;
         });
@@ -62,7 +62,7 @@ describe('/modules/users/server/policies/admin.server.policy.js', () => {
           mockAcl = {
             allow: sandbox.stub().rejects('Error!')
           };
-          return aclStub = sandbox.stub(aclModule, 'get').returns(mockAcl);
+          return aclStub = sandbox.stub(aclModule, 'get').resolves(mockAcl);
 
         });
 

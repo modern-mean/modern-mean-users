@@ -3,7 +3,6 @@
 import { express } from 'modern-mean-core-material/dist/server/app/express';
 import adminRoutes from '../../server/routes/admin.server.routes';
 import adminPolicy from '../../server/policies/admin.server.policy';
-import aclModule from '../../server/config/acl';
 import * as adminUsers from '../../server/admin.users.module';
 import mongooseModule from 'modern-mean-core-material/dist/server/app/mongoose';
 
@@ -30,7 +29,7 @@ describe('/modules/users/server/admin.users.module.js', () => {
     });
 
     describe('init()', () => {
-      let routesStub, policyStub, aclStub, app;
+      let routesStub, policyStub, app;
 
       describe('success', () => {
 
@@ -38,15 +37,6 @@ describe('/modules/users/server/admin.users.module.js', () => {
           app = express;
           routesStub = sandbox.stub(adminRoutes, 'init').resolves();
           policyStub = sandbox.stub(adminPolicy, 'policy').resolves();
-          aclStub = sandbox.stub(aclModule, 'init').resolves();
-
-        });
-
-        it('should setup acl', () => {
-          return adminUsers.init(app)
-                  .then(() => {
-                    return aclStub.should.have.been.called;
-                  });
         });
 
         it('should setup user admin routes', () => {
@@ -73,11 +63,11 @@ describe('/modules/users/server/admin.users.module.js', () => {
 
 
         describe('acl', () => {
-          let aclStub;
+          let policyStub;
 
           beforeEach(() => {
             app = express;
-            aclStub = sandbox.stub(aclModule, 'init').rejects('Error!');
+            policyStub = sandbox.stub(adminPolicy, 'policy').rejects('Error!');
           });
 
           it('should reject a promise', () => {
@@ -87,10 +77,11 @@ describe('/modules/users/server/admin.users.module.js', () => {
         });
 
         describe('routes', () => {
-          let routesStub;
+          let routesStub, policyStub;
 
           beforeEach(() => {
             app = express;
+            policyStub = sandbox.stub(adminPolicy, 'policy').resolves();
             routesStub = sandbox.stub(adminRoutes, 'init').rejects('Error!');
           });
 
