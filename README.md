@@ -19,9 +19,9 @@ git clone https://github.com/modern-mean/users-material.git modern-mean/modules/
 Or symlink
 ```sh
 git clone https://github.com/modern-mean/modern-mean.git
-git clone https://github.com/modern-mean/users-material.git
+git clone https://github.com/modern-mean/users-material.git modern-mean-users-material
 cd modern-mean/modules
-ln -s ../../core-material modern-mean-users-material
+ln -s ../../modern-mean-users-material .
 ```
 Then npm and bower install the packages.
 
