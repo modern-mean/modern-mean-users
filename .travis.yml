@@ -29,7 +29,7 @@ before_install:
   - npm install gulpjs/gulp-cli#4.0 -g
 install:
   - npm install
-  - bower install--config.interactive=false
+  - bower install --config.interactive=false
 #  - npm install protractor
 #  - "export DISPLAY=:99.0"
 #  - "sh -e /etc/init.d/xvfb start"
