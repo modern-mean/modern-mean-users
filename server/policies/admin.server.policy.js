@@ -17,7 +17,7 @@ function policy() {
           }]
         }])
         .then(() => {
-          logger.verbose('Users::Routes::Admin::Success');
+          logger.verbose('Users::Policy::Admin::Success');
           return resolve();
         })
         .catch(err => {
