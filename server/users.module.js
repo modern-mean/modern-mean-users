@@ -5,6 +5,7 @@ import userModel from './models/users.server.model.user';
 import userSeed from './models/users.server.model.user.seed';
 import userRoutes from './routes/users.server.routes';
 import authRoutes from './routes/auth.server.routes';
+import imageRoutes from './routes/image.server.routes';
 import authentication from './authentication/authentication';
 import { config } from './config/config';
 import aclModule from './config/acl';
@@ -36,6 +37,7 @@ function init(app) {
     authentication.init(app)
       .then(userRoutes.init)
       .then(authRoutes.init)
+      //.then(imageRoutes.init)
       .then(function () {
         logger.verbose('Users::Init::Express::Success');
         return resolve(app);
