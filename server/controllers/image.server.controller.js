@@ -1,7 +1,7 @@
 'use strict';
 
 import { mongoose } from 'modern-mean-core-material/dist/server/app/mongoose';
-import { Grid } from 'gridfs-stream';
+import Grid from 'gridfs-stream';
 
 Grid.mongo = mongoose.mongo;
 var gfs = new Grid(mongoose.connection.db);
@@ -32,7 +32,7 @@ function create (req, res) {
 }
 
  function read(req, res) {
-    gfs.findOne({_id: req.params.id}, function (err, file) {
+    gfs.findOne({_id: req.params.imageId}, function (err, file) {
         if (err || !file) {
             return res.status(400).send({
                 message: 'File not found'
