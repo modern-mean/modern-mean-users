@@ -37,7 +37,7 @@ function init(app) {
     authentication.init(app)
       .then(userRoutes.init)
       .then(authRoutes.init)
-      //.then(imageRoutes.init)
+      .then(imageRoutes.init)
       .then(function () {
         logger.verbose('Users::Init::Express::Success');
         return resolve(app);
