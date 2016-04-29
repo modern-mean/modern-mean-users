@@ -9,12 +9,12 @@
     </h1>
   </md-toolbar>
   <md-list ng-show="!vm.authentication.token">
-    <md-list-item ui-sref="root.user.authentication.signin" >
+    <md-list-item ui-sref="root.user.authentication.type({ type: 'signin' })" >
       <ng-md-icon icon="home"></ng-md-icon>
       <span flex></span>
       <span>Sign In</span>
     </md-list-item>
-    <md-list-item ui-sref="root.user.authentication.signup" >
+    <md-list-item ui-sref="root.user.authentication.type({ type: 'signup' })" >
       <ng-md-icon icon="home"></ng-md-icon>
       <span flex></span>
       <span>Sign Up</span>

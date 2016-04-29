@@ -13,7 +13,7 @@
       responseError: function(rejection) {
         switch (rejection.status) {
           case 401:
-            $injector.get('$state').transitionTo('root.user.authentication.signin');
+            $injector.get('$state').transitionTo('root.user.authentication.type', { type: 'signin' });
             $log.debug('Users::authInterceptor::401', rejection);
             break;
           case 403:

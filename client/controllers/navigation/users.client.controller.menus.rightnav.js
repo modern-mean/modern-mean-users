@@ -26,7 +26,7 @@
         .close()
         .then(Authentication.signout)
         .then(function () {
-          $state.go('root.user.authentication.signin');
+          $state.go('root.user.authentication.type', { type: 'signin' });
           var toast = $mdToast.simple()
             .textContent('Signout Successful!')
             .position('bottom right')

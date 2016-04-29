@@ -1,34 +1,68 @@
-<md-toolbar>
-  <div class="md-toolbar-tools">
-    <h2 class="md-title">Or with your account</h2>
-    <span flex></span>
-    <md-button class="md-icon-button md-accent" aria-label="Clear Form" ng-click="vm.clearForm()">
-      <ng-md-icon icon="cached"></ng-md-icon>
+<md-card>
+  <md-card-title>
+    <md-card-title-text>
+      <span class="md-subhead">Social Accounts</span>
+    </md-card-title-text>
+  </md-card-title>
+  <md-card-actions layout="row" layout-align="start center">
+    <md-button class="md-fab md-mini md-accent md-raised">
+      <md-tooltip md-direction="bottom">
+        Facebook
+      </md-tooltip>
+      <ng-md-icon icon="facebook"></ng-md-icon>
     </md-button>
-  </div>
-</md-toolbar>
-<md-content>
-  <form name="vm.forms.signIn" ng-submit="vm.signin()" novalidate>
-    <md-input-container class="md-block">
-      <input type="email" id="email" name="email" ng-model="vm.credentials.email" placeholder="email address" required>
-      <div ng-messages="vm.forms.signIn.email.$error" role="alert">
-        <div ng-message="required">email is required.</div>
-      </div>
-    </md-input-container>
-    <md-input-container class="md-block">
-      <input type="password" id="password" name="password" ng-model="vm.credentials.password" placeholder="password" required>
-      <div ng-messages="vm.forms.signIn.password.$error" role="alert">
-        <div ng-message="required">Password is required.</div>
-      </div>
-    </md-input-container>
-    <section layout="row" layout-align="center center">
-      <md-button type="submit" class="md-raised md-primary" aria-label="Sign In" ng-disabled="vm.forms.signIn.$invalid">Sign in</md-button>
-    </section>
-    <section layout="row" layout-align="center center">
-      <a ui-sref="password.forgot">Forgot your password?</a>
-    </section>
-    <section layout="row" layout-align="center center" ng-show="vm.error">
-      <span ng-bind="vm.error"></span>
-    </section>
-  </form>
-</md-content>
+    <md-button class="md-fab md-mini md-accent md-raised">
+      <md-tooltip md-direction="bottom">
+        Twitter
+      </md-tooltip>
+      <ng-md-icon icon="twitter"></ng-md-icon>
+    </md-button>
+    <md-button class="md-fab md-mini md-accent md-raised">
+      <md-tooltip md-direction="bottom">
+        Google
+      </md-tooltip>
+      <ng-md-icon icon="google-plus"></ng-md-icon>
+    </md-button>
+    <md-button class="md-fab md-mini md-accent md-raised">
+      <md-tooltip md-direction="bottom">
+        LinkedIn
+      </md-tooltip>
+      <ng-md-icon icon="linkedin"></ng-md-icon>
+    </md-button>
+    <md-button class="md-fab md-mini md-accent md-raised">
+      <md-tooltip md-direction="bottom">
+        Github
+      </md-tooltip>
+      <ng-md-icon icon="github-circle"></ng-md-icon>
+    </md-button>
+  </md-card-actions>
+  <md-card-title>
+    <md-card-title-text>
+      <span class="md-subhead">Login</span>
+    </md-card-title-text>
+  </md-card-title>
+  <md-card-content>
+    <form name="vm.forms.signIn" novalidate>
+      <md-input-container class="md-block">
+        <input type="email" id="email" name="email" ng-model="vm.credentials.email" placeholder="email address" required>
+        <div ng-messages="vm.forms.signIn.email.$error" role="alert">
+          <div ng-message="required">email is required.</div>
+        </div>
+      </md-input-container>
+      <md-input-container class="md-block">
+        <input type="password" id="password" name="password" ng-model="vm.credentials.password" placeholder="password" required>
+        <div ng-messages="vm.forms.signIn.password.$error" role="alert">
+          <div ng-message="required">Password is required.</div>
+        </div>
+      </md-input-container>
+    </form>
+  </md-card-content>
+  <md-card-actions md-theme="card-actions" layout="row" layout-align="center">
+    <md-button ng-click="vm.signin()" class="md-raised md-primary" aria-label="Sign In" ng-disabled="vm.forms.signIn.$invalid">Sign in</md-button>
+    <md-button ng-click="vm.clearForm()" class="md-raised md-warn" aria-label="Clear Form">Clear</md-button>
+    <md-button class="md-raised md-accent" aria-label="Forgot Password">
+      Forgot Password
+      <ng-md-icon icon="help"></ng-md-icon>
+    </md-button>
+  </md-card-actions>
+</md-card>

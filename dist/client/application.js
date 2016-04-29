@@ -163,18 +163,20 @@
         views: {
           'main@': {
             templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.html',
+            controller: 'AuthenticationController',
+            controllerAs: 'vm'
           }
         }
       })
-      .state('root.user.authentication.signup', {
-        url: '/signup',
+      .state('root.user.authentication.type', {
+        url: '/:type',
         views: {
-          'social': {
-            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.social.html',
-            controller: 'SocialAuthenticationController',
+          'signin': {
+            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.signin.html',
+            controller: 'SigninAuthenticationController',
             controllerAs: 'vm'
           },
-          'auth': {
+          'signup': {
             templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.signup.html',
             controller: 'SignupAuthenticationController',
             controllerAs: 'vm'
@@ -182,26 +184,7 @@
         },
         data: {
           ignoreAuth: true,
-          pageTitle: 'Account Sign Up'
-        }
-      })
-      .state('root.user.authentication.signin', {
-        url: '/signin',
-        views: {
-          'social': {
-            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.social.html',
-            controller: 'SocialAuthenticationController',
-            controllerAs: 'vm'
-          },
-          'auth': {
-            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.signin.html',
-            controller: 'SigninAuthenticationController',
-            controllerAs: 'vm'
-          }
-        },
-        data: {
-          ignoreAuth: true,
-          pageTitle: 'Account Sign In'
+          pageTitle: 'Account Login'
         }
       })
       .state('root.user.password', {
@@ -465,7 +448,7 @@
               if (Authentication.token !== undefined) {
                 $state.go('root.forbidden');
               } else {
-                $state.go('root.user.authentication.signin').then(function () {
+                $state.go('root.user.authentication.type', { type: 'signin' }).then(function () {
                   $rootScope.storePreviousState(toState, toParams);
                 });
               }
@@ -798,6 +781,24 @@
 
   angular
     .module('users')
+    .controller('AuthenticationController', AuthenticationController);
+
+  AuthenticationController.$inject = ['$state', '$log'];
+
+  function AuthenticationController($state, $log) {
+    var vm = this;
+
+    vm.selected = (($state.params.type === 'signin') ? 0 : 1);
+
+    $log.info('AuthenticationController::Init', $state.params);
+  }
+})();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('users')
     .controller('SigninAuthenticationController', SigninAuthenticationController);
 
   SigninAuthenticationController.$inject = ['Authentication', '$state', '$mdToast', '$log'];
@@ -1001,7 +1002,7 @@
         .close()
         .then(Authentication.signout)
         .then(function () {
-          $state.go('root.user.authentication.signin');
+          $state.go('root.user.authentication.type', { type: 'signin' });
           var toast = $mdToast.simple()
             .textContent('Signout Successful!')
             .position('bottom right')
@@ -1394,7 +1395,7 @@
       responseError: function(rejection) {
         switch (rejection.status) {
           case 401:
-            $injector.get('$state').transitionTo('root.user.authentication.signin');
+            $injector.get('$state').transitionTo('root.user.authentication.type', { type: 'signin' });
             $log.debug('Users::authInterceptor::401', rejection);
             break;
           case 403:

@@ -63,7 +63,7 @@
           var spy = sandbox.spy($state, 'go');
           $scope.vm.signout();
           $scope.$digest();
-          expect(spy).to.have.been.calledWith('root.user.authentication.signin');
+          expect(spy).to.have.been.calledWith('root.user.authentication.type', { type: 'signin' });
         });
 
 

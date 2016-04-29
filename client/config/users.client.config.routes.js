@@ -59,18 +59,20 @@
         views: {
           'main@': {
             templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.html',
+            controller: 'AuthenticationController',
+            controllerAs: 'vm'
           }
         }
       })
-      .state('root.user.authentication.signup', {
-        url: '/signup',
+      .state('root.user.authentication.type', {
+        url: '/:type',
         views: {
-          'social': {
-            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.social.html',
-            controller: 'SocialAuthenticationController',
+          'signin': {
+            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.signin.html',
+            controller: 'SigninAuthenticationController',
             controllerAs: 'vm'
           },
-          'auth': {
+          'signup': {
             templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.signup.html',
             controller: 'SignupAuthenticationController',
             controllerAs: 'vm'
@@ -78,26 +80,7 @@
         },
         data: {
           ignoreAuth: true,
-          pageTitle: 'Account Sign Up'
-        }
-      })
-      .state('root.user.authentication.signin', {
-        url: '/signin',
-        views: {
-          'social': {
-            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.social.html',
-            controller: 'SocialAuthenticationController',
-            controllerAs: 'vm'
-          },
-          'auth': {
-            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.signin.html',
-            controller: 'SigninAuthenticationController',
-            controllerAs: 'vm'
-          }
-        },
-        data: {
-          ignoreAuth: true,
-          pageTitle: 'Account Sign In'
+          pageTitle: 'Account Login'
         }
       })
       .state('root.user.password', {
