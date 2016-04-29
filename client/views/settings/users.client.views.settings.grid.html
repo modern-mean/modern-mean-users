@@ -1,20 +1,27 @@
-<md-content layout-padding layout-xs="column" layout-sm="column" layout="row">
-  <div flex="auto" layout="column">
-    <div ui-view="profile"></div>
-  </div>
-  <div flex="auto" layout="column">
-    <div ui-view="password"></div>
-  </div>
-  <div flex="auto" layout="column">
-    <div ui-view="picture"></div>
-  </div>
-</md-content>
-
-<md-content layout-padding layout-xs="column" layout-sm="column" layout="row">
-  <div flex="auto" layout="column">
-    <div ui-view="email"></div>
-  </div>
-  <div flex="auto" layout="column">
-    <div ui-view="address"></div>
-  </div>
-</md-content>
+<md-tabs md-dynamic-height md-border-bottom>
+  <md-tab label="Profile">
+    <md-content class="md-padding">
+      <div ui-view="profile"></div>
+    </md-content>
+  </md-tab>
+  <md-tab label="Password">
+    <md-content class="md-padding">
+      <div ui-view="password"></div>
+    </md-content>
+  </md-tab>
+  <md-tab label="Picture">
+    <md-content class="md-padding">
+      <div ui-view="picture"></div>
+    </md-content>
+  </md-tab>
+  <md-tab label="Email">
+    <md-content class="md-padding">
+      <div ui-view="email"></div>
+    </md-content>
+  </md-tab>
+  <md-tab label="Address">
+    <md-content class="md-padding">
+      <div ui-view="address"></div>
+    </md-content>
+  </md-tab>
+</md-tabs>
