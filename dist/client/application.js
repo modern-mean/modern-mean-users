@@ -121,9 +121,14 @@
         data: {
           roles: ['user', 'admin']
         },
+        resolve: {
+          userResolve: getUser
+        },
         views: {
           'main@': {
-            templateUrl: 'modern-mean-users-material/views/settings/users.client.views.settings.grid.html'
+            templateUrl: 'modern-mean-users-material/views/settings/users.client.views.settings.profile.html',
+            controller: 'UsersProfileController',
+            controllerAs: 'vm'
           }
         }
       })
@@ -140,9 +145,9 @@
             controller: 'UsersEmailController',
             controllerAs: 'vm'
           },
-          'profile': {
-            templateUrl: 'modern-mean-users-material/views/settings/users.client.views.settings.profile.html',
-            controller: 'UsersProfileController',
+          'personal': {
+            templateUrl: 'modern-mean-users-material/views/settings/users.client.views.settings.personal.html',
+            controller: 'UsersPersonalController',
             controllerAs: 'vm'
           },
           'password': {
@@ -208,6 +213,12 @@
         }
       });
   }
+
+  getUser.$inject = ['Authentication'];
+  function getUser(Authentication) {
+    return Authentication.user;
+  }
+
 })();
 
 (function() {
@@ -1232,6 +1243,58 @@
 
   angular
     .module('users')
+    .controller('UsersPersonalController', UsersPersonalController);
+
+  UsersPersonalController.$inject = ['Authentication', '$mdToast', '$log'];
+
+  function UsersPersonalController(Authentication, $mdToast, $log) {
+    var vm = this;
+
+    vm.clear = clear;
+    vm.executing = false;
+    vm.save = save;
+    vm.user = Authentication.user;
+
+    function clear() {
+      vm.user
+        .$get()
+        .then(function() {
+          vm.forms.profileForm.$setPristine();
+          vm.forms.profileForm.$setUntouched();
+        });
+    }
+
+    function save() {
+      $log.debug('UsersProfileController::save', vm);
+      vm.executing = true;
+
+      var toast = $mdToast.simple()
+        .position('bottom right')
+        .hideDelay(6000);
+
+      vm.user.$update(function (response) {
+        vm.executing = false;
+        vm.clear();
+        toast.textContent('Profile Updated Successfully').theme('toast-success');
+        $mdToast.show(toast);
+        $log.debug('UsersProfileController::save::success', response);
+      }, function (err) {
+        vm.executing = false;
+        toast.textContent('Profile Update Error').theme('toast-error');
+        $mdToast.show(toast);
+        $log.error('UsersProfileController::save::error', err);
+      });
+    }
+
+    $log.info('Users::UsersPersonalController::Init', vm);
+  }
+})();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('users')
     .controller('UsersPictureController', UsersPictureController);
 
   UsersPictureController.$inject = ['Authentication', 'Upload', '$mdToast', '$log'];
@@ -1284,48 +1347,14 @@
     .module('users')
     .controller('UsersProfileController', UsersProfileController);
 
-  UsersProfileController.$inject = ['Authentication', '$mdToast', '$log'];
+  UsersProfileController.$inject = ['userResolve', '$log'];
 
-  function UsersProfileController(Authentication, $mdToast, $log) {
+  function UsersProfileController(userResolve, $log) {
     var vm = this;
 
-    vm.clear = clear;
-    vm.executing = false;
-    vm.save = save;
-    vm.user = Authentication.user;
+    vm.user = userResolve;
 
-    function clear() {
-      vm.user
-        .$get()
-        .then(function() {
-          vm.forms.profileForm.$setPristine();
-          vm.forms.profileForm.$setUntouched();
-        });
-    }
-
-    function save() {
-      $log.debug('UsersProfileController::save', vm);
-      vm.executing = true;
-
-      var toast = $mdToast.simple()
-        .position('bottom right')
-        .hideDelay(6000);
-
-      vm.user.$update(function (response) {
-        vm.executing = false;
-        vm.clear();
-        toast.textContent('Profile Updated Successfully').theme('toast-success');
-        $mdToast.show(toast);
-        $log.debug('UsersProfileController::save::success', response);
-      }, function (err) {
-        vm.executing = false;
-        toast.textContent('Profile Update Error').theme('toast-error');
-        $mdToast.show(toast);
-        $log.error('UsersProfileController::save::error', err);
-      });
-    }
-
-    $log.info('Users::EditProfileController::Init', vm);
+    $log.info('Users::UsersProfileController::Init', vm);
   }
 })();
 

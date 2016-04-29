@@ -23,18 +23,35 @@
         expect(state).to.be.an('object');
       });
 
-      it('should have property url that is /user', function () {
+      it('should have propertys', function () {
         expect(state.url).to.equal('/user');
+        expect(state.abstract).to.equal(true);
+
       });
 
-      it('should have property abstract that is true', function () {
-        expect(state.abstract).to.equal(true);
+      it('should resolve', function () {
+        expect(state.resolve).to.be.an('object');
+        expect(state.resolve.userResolve).to.be.a('function');
       });
 
       it('should have property data that is an array with roles user and admin', function () {
         expect(state.data.roles).to.be.an('array');
         expect(state.data.roles).to.contain('user');
         expect(state.data.roles).to.contain('admin');
+      });
+
+      it('should have property views that is an object', function () {
+        expect(state.views).to.be.an('object');
+      });
+
+      describe('views', function () {
+
+        it('should have a main@ view', function () {
+          expect(state.views).to.include.keys('main@');
+          expect(state.views['main@'].controller).to.equal('UsersProfileController');
+          expect(state.views['main@'].controllerAs).to.equal('vm');
+        });
+
       });
 
     });
@@ -66,11 +83,11 @@
           expect(state.views['email'].controllerAs).to.equal('vm');
         });
 
-        it('should have property profile', function () {
-          expect(state.views).to.include.keys('profile');
-          expect(state.views['profile'].templateUrl).to.equal('modern-mean-users-material/views/settings/users.client.views.settings.profile.html');
-          expect(state.views['profile'].controller).to.equal('UsersProfileController');
-          expect(state.views['profile'].controllerAs).to.equal('vm');
+        it('should have property personal', function () {
+          expect(state.views).to.include.keys('personal');
+          expect(state.views['personal'].templateUrl).to.equal('modern-mean-users-material/views/settings/users.client.views.settings.personal.html');
+          expect(state.views['personal'].controller).to.equal('UsersPersonalController');
+          expect(state.views['personal'].controllerAs).to.equal('vm');
         });
 
         it('should have property password', function () {

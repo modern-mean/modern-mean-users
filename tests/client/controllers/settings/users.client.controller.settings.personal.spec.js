@@ -7,7 +7,7 @@
       $rootScope,
       $compile,
       $mdToast,
-      UsersProfileController,
+      UsersPersonalController,
       Authentication,
       $httpBackend,
       User,
@@ -22,7 +22,7 @@
       $scope = $rootScope.$new();
 
 
-      UsersProfileController = $controller('UsersProfileController as vm', {
+      UsersPersonalController = $controller('UsersPersonalController as vm', {
         $scope: $scope,
         Authentication: Authentication
       });
@@ -36,7 +36,7 @@
       sandbox.restore();
     });
 
-    describe('UsersProfileController', function () {
+    describe('UsersPersonalController', function () {
 
       it('should have a vm variable', function () {
         expect($scope.vm).to.be.an('object');

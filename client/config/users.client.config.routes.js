@@ -17,9 +17,14 @@
         data: {
           roles: ['user', 'admin']
         },
+        resolve: {
+          userResolve: getUser
+        },
         views: {
           'main@': {
-            templateUrl: 'modern-mean-users-material/views/settings/users.client.views.settings.grid.html'
+            templateUrl: 'modern-mean-users-material/views/settings/users.client.views.settings.profile.html',
+            controller: 'UsersProfileController',
+            controllerAs: 'vm'
           }
         }
       })
@@ -36,9 +41,9 @@
             controller: 'UsersEmailController',
             controllerAs: 'vm'
           },
-          'profile': {
-            templateUrl: 'modern-mean-users-material/views/settings/users.client.views.settings.profile.html',
-            controller: 'UsersProfileController',
+          'personal': {
+            templateUrl: 'modern-mean-users-material/views/settings/users.client.views.settings.personal.html',
+            controller: 'UsersPersonalController',
             controllerAs: 'vm'
           },
           'password': {
@@ -104,4 +109,10 @@
         }
       });
   }
+
+  getUser.$inject = ['Authentication'];
+  function getUser(Authentication) {
+    return Authentication.user;
+  }
+
 })();
