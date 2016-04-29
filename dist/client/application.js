@@ -131,27 +131,27 @@
         url: '/settings',
         views: {
           'address': {
-            templateUrl: 'modern-mean-users-material/views/cards/users.client.views.cards.addresses.html',
+            templateUrl: 'modern-mean-users-material/views/settings/users.client.views.settings.addresses.html',
             controller: 'UsersAddressController',
             controllerAs: 'vm'
           },
           'email': {
-            templateUrl: 'modern-mean-users-material/views/cards/users.client.views.cards.emails.html',
+            templateUrl: 'modern-mean-users-material/views/settings/users.client.views.settings.emails.html',
             controller: 'UsersEmailController',
             controllerAs: 'vm'
           },
           'profile': {
-            templateUrl: 'modern-mean-users-material/views/cards/users.client.views.cards.profile.html',
+            templateUrl: 'modern-mean-users-material/views/settings/users.client.views.settings.profile.html',
             controller: 'UsersProfileController',
             controllerAs: 'vm'
           },
           'password': {
-            templateUrl: 'modern-mean-users-material/views/cards/users.client.views.cards.password.html',
+            templateUrl: 'modern-mean-users-material/views/settings/users.client.views.settings.password.html',
             controller: 'UsersPasswordController',
             controllerAs: 'vm',
           },
           'picture': {
-            templateUrl: 'modern-mean-users-material/views/cards/users.client.views.cards.picture.html',
+            templateUrl: 'modern-mean-users-material/views/settings/users.client.views.settings.picture.html',
             controller: 'UsersPictureController',
             controllerAs: 'vm'
           }

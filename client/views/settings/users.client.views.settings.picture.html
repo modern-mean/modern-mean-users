@@ -1,0 +1,12 @@
+<md-input-container class="md-block">
+  <div
+    ng-show="!vm.file"
+    ngf-select ngf-drop ng-model="vm.file"
+    class="drop-box ng-pristine ng-valid" ngf-drop-available="dropAvailable">Select File
+    <span ng-show="dropAvailable" class=""> or Drop File</span>
+  </div>
+  <img ngf-src="vm.file">
+</md-input-container>
+<md-button ng-disabled="vm.executing || !vm.file" class="md-raised md-accent" ng-click="vm.save()">Save</md-button>
+<md-button ng-disabled="vm.executing || !vm.file" class="md-raised md-warn" ng-click="vm.clear()">Cancel</md-button>
+<md-progress-linear class="md-accent" ng-show="vm.executing" md-mode="indeterminate"></md-progress-linear>

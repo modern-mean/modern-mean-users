@@ -61,28 +61,28 @@
 
         it('should have property email', function () {
           expect(state.views).to.include.keys('email');
-          expect(state.views['email'].templateUrl).to.equal('modern-mean-users-material/views/cards/users.client.views.cards.emails.html');
+          expect(state.views['email'].templateUrl).to.equal('modern-mean-users-material/views/settings/users.client.views.settings.emails.html');
           expect(state.views['email'].controller).to.equal('UsersEmailController');
           expect(state.views['email'].controllerAs).to.equal('vm');
         });
 
         it('should have property profile', function () {
           expect(state.views).to.include.keys('profile');
-          expect(state.views['profile'].templateUrl).to.equal('modern-mean-users-material/views/cards/users.client.views.cards.profile.html');
+          expect(state.views['profile'].templateUrl).to.equal('modern-mean-users-material/views/settings/users.client.views.settings.profile.html');
           expect(state.views['profile'].controller).to.equal('UsersProfileController');
           expect(state.views['profile'].controllerAs).to.equal('vm');
         });
 
         it('should have property password', function () {
           expect(state.views).to.include.keys('password');
-          expect(state.views['password'].templateUrl).to.equal('modern-mean-users-material/views/cards/users.client.views.cards.password.html');
+          expect(state.views['password'].templateUrl).to.equal('modern-mean-users-material/views/settings/users.client.views.settings.password.html');
           expect(state.views['password'].controller).to.equal('UsersPasswordController');
           expect(state.views['password'].controllerAs).to.equal('vm');
         });
 
         it('should have property picture', function () {
           expect(state.views).to.include.keys('picture');
-          expect(state.views['picture'].templateUrl).to.equal('modern-mean-users-material/views/cards/users.client.views.cards.picture.html');
+          expect(state.views['picture'].templateUrl).to.equal('modern-mean-users-material/views/settings/users.client.views.settings.picture.html');
           expect(state.views['picture'].controller).to.equal('UsersPictureController');
           expect(state.views['picture'].controllerAs).to.equal('vm');
         });
