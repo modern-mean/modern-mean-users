@@ -53,36 +53,6 @@
           }
         }
       })
-      .state('root.user.authentication', {
-        abstract: true,
-        url: '/authentication',
-        views: {
-          'main@': {
-            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.html',
-            controller: 'AuthenticationController',
-            controllerAs: 'vm'
-          }
-        }
-      })
-      .state('root.user.authentication.type', {
-        url: '/:type',
-        views: {
-          'signin': {
-            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.signin.html',
-            controller: 'SigninAuthenticationController',
-            controllerAs: 'vm'
-          },
-          'signup': {
-            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.signup.html',
-            controller: 'SignupAuthenticationController',
-            controllerAs: 'vm'
-          }
-        },
-        data: {
-          ignoreAuth: true,
-          pageTitle: 'Account Login'
-        }
-      })
       .state('root.user.password', {
         abstract: true,
         url: '/password'

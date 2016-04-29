@@ -1,84 +1,81 @@
-<md-card>
-  <md-card-title>
-    <md-card-title-text>
-      <span class="md-subhead">Social Accounts</span>
-    </md-card-title-text>
-  </md-card-title>
-  <md-card-actions layout="row" layout-align="start center">
+<md-dialog aria-label="Sign In"  ng-cloak>
+  <md-toolbar class="md-accent">
+    <div class="md-toolbar-tools">
+        <h2>Sign Up</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="vm.cancel()">
+          <ng-md-icon icon="close"></ng-md-icon>
+        </md-button>
+      </div>
+  </md-toolbar>
+  <md-dialog-actions layout="row" layout-align="center">
     <md-button class="md-fab md-mini md-accent md-raised">
-      <md-tooltip md-direction="bottom">
+      <md-tooltip md-direction="top">
         Facebook
       </md-tooltip>
       <ng-md-icon icon="facebook"></ng-md-icon>
     </md-button>
     <md-button class="md-fab md-mini md-accent md-raised">
-      <md-tooltip md-direction="bottom">
+      <md-tooltip md-direction="top">
         Twitter
       </md-tooltip>
       <ng-md-icon icon="twitter"></ng-md-icon>
     </md-button>
     <md-button class="md-fab md-mini md-accent md-raised">
-      <md-tooltip md-direction="bottom">
+      <md-tooltip md-direction="top">
         Google
       </md-tooltip>
       <ng-md-icon icon="google-plus"></ng-md-icon>
     </md-button>
     <md-button class="md-fab md-mini md-accent md-raised">
-      <md-tooltip md-direction="bottom">
+      <md-tooltip md-direction="top">
         LinkedIn
       </md-tooltip>
       <ng-md-icon icon="linkedin"></ng-md-icon>
     </md-button>
     <md-button class="md-fab md-mini md-accent md-raised">
-      <md-tooltip md-direction="bottom">
+      <md-tooltip md-direction="top">
         Github
       </md-tooltip>
       <ng-md-icon icon="github-circle"></ng-md-icon>
     </md-button>
-  </md-card-actions>
-  <md-card-title>
-    <md-card-title-text>
-      <span class="md-subhead">Sign Up</span>
-    </md-card-title-text>
-  </md-card-title>
-  <md-card-content>
-    <form name="vm.forms.signUp" novalidate>
-      <md-input-container class="md-block">
-        <input type="text" id="firstName" name="firstName" ng-model="vm.user.name.first" placeholder="First Name" required>
-        <div ng-messages="vm.forms.signUp.firstName.$error" role="alert">
-          <div ng-message="required">First name is required.</div>
-        </div>
-      </md-input-container>
-      <md-input-container class="md-block">
-        <input type="text" id="lastName" name="lastName" ng-model="vm.user.name.last" placeholder="Last Name" required>
-        <div ng-messages="vm.forms.signUp.lastName.$error" role="alert">
-          <div ng-message="required">Last name is required.</div>
-        </div>
-      </md-input-container>
-      <md-input-container class="md-block">
-        <input type="email" id="email" name="email" ng-model="vm.user.email" placeholder="Email address" lowercase required>
-        <div ng-messages="vm.forms.signUp.email.$error" role="alert">
-          <div ng-message="required">Email address is required.</div>
-          <div ng-message="email">Email address is invalid.</div>
-        </div>
-      </md-input-container>
-      <md-input-container class="md-block">
-        <input type="password" id="password" name="password" ng-model="vm.user.password" placeholder="Password" uib-popover="{{vm.popoverMsg}}" uib-popover-trigger="focus" password-validator required>
-        <div ng-messages="vm.forms.signUp.password.$error" role="alert">
-          <div ng-message="required">Password is required.</div>
-          <div ng-repeat="passwordError in passwordErrors">
-            <div ng-show="vm.forms.signUp.password.$error.requirements">{{passwordError}}</div>
+  </md-dialog-actions>
+  <md-dialog-content>
+    <div class="md-dialog-content">
+      <form name="vm.forms.signUp" novalidate>
+        <md-input-container class="md-block">
+          <input type="text" id="firstName" name="firstName" ng-model="vm.user.name.first" placeholder="First Name" required>
+          <div ng-messages="vm.forms.signUp.firstName.$error" role="alert">
+            <div ng-message="required">First name is required.</div>
           </div>
-        </div>
-      </md-input-container>
-    </form>
-  </md-card-content>
-  <md-card-actions md-theme="card-actions" layout="row" layout-align="center">
-    <md-button ng-click="vm.signup()" class="md-raised md-primary" aria-label="Sign In" ng-disabled="vm.forms.signUp.$invalid">Sign Up</md-button>
+        </md-input-container>
+        <md-input-container class="md-block">
+          <input type="text" id="lastName" name="lastName" ng-model="vm.user.name.last" placeholder="Last Name" required>
+          <div ng-messages="vm.forms.signUp.lastName.$error" role="alert">
+            <div ng-message="required">Last name is required.</div>
+          </div>
+        </md-input-container>
+        <md-input-container class="md-block">
+          <input type="email" id="email" name="email" ng-model="vm.user.email" placeholder="Email address" lowercase required>
+          <div ng-messages="vm.forms.signUp.email.$error" role="alert">
+            <div ng-message="required">Email address is required.</div>
+            <div ng-message="email">Email address is invalid.</div>
+          </div>
+        </md-input-container>
+        <md-input-container class="md-block">
+          <input type="password" id="password" name="password" ng-model="vm.user.password" placeholder="Password" uib-popover="{{vm.popoverMsg}}" uib-popover-trigger="focus" password-validator required>
+          <div ng-messages="vm.forms.signUp.password.$error" role="alert">
+            <div ng-message="required">Password is required.</div>
+            <div ng-repeat="passwordError in passwordErrors">
+              <div ng-show="vm.forms.signUp.password.$error.requirements">{{passwordError}}</div>
+            </div>
+          </div>
+        </md-input-container>
+      </form>
+    </div>
+  </md-dialog-content>
+  <md-dialog-actions layout="row" md-theme="card-actions" layout-align="center">
+    <md-button ng-click="vm.signup()" class="md-raised md-primary" aria-label="Sign Up" ng-disabled="vm.forms.signUp.$invalid">Sign Up</md-button>
     <md-button ng-click="vm.clearForm()" class="md-raised md-warn" aria-label="Clear Form">Clear</md-button>
-    <md-button class="md-raised md-accent" aria-label="Forgot Password">
-      Forgot Password
-      <ng-md-icon icon="help"></ng-md-icon>
-    </md-button>
-  </md-card-actions>
-</md-card>
+  </md-dialog-actions>
+</md-dialog>

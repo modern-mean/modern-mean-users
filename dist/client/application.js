@@ -157,36 +157,6 @@
           }
         }
       })
-      .state('root.user.authentication', {
-        abstract: true,
-        url: '/authentication',
-        views: {
-          'main@': {
-            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.html',
-            controller: 'AuthenticationController',
-            controllerAs: 'vm'
-          }
-        }
-      })
-      .state('root.user.authentication.type', {
-        url: '/:type',
-        views: {
-          'signin': {
-            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.signin.html',
-            controller: 'SigninAuthenticationController',
-            controllerAs: 'vm'
-          },
-          'signup': {
-            templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.signup.html',
-            controller: 'SignupAuthenticationController',
-            controllerAs: 'vm'
-          }
-        },
-        data: {
-          ignoreAuth: true,
-          pageTitle: 'Account Login'
-        }
-      })
       .state('root.user.password', {
         abstract: true,
         url: '/password'
@@ -448,7 +418,7 @@
               if (Authentication.token !== undefined) {
                 $state.go('root.forbidden');
               } else {
-                $state.go('root.user.authentication.type', { type: 'signin' }).then(function () {
+                $state.go('root.home').then(function () {
                   $rootScope.storePreviousState(toState, toParams);
                 });
               }
@@ -801,17 +771,22 @@
     .module('users')
     .controller('SigninAuthenticationController', SigninAuthenticationController);
 
-  SigninAuthenticationController.$inject = ['Authentication', '$state', '$mdToast', '$log'];
+  SigninAuthenticationController.$inject = ['Authentication', '$state', '$mdToast', '$mdDialog','$log'];
 
-  function SigninAuthenticationController(Authentication, $state, $mdToast, $log) {
+  function SigninAuthenticationController(Authentication, $state, $mdToast, $mdDialog, $log) {
     var vm = this;
 
     vm.authentication = Authentication;
+    vm.cancel = cancel;
     vm.clearForm = clearForm;
     vm.credentials = {};
     vm.error = undefined;
     vm.forms = {};
     vm.signin = signin;
+
+    function cancel() {
+      $mdDialog.cancel();
+    }
 
     function signin () {
       vm.error = undefined;
@@ -824,7 +799,7 @@
         .signin(vm.credentials)
         .then(
           function (response) {
-            $state.go($state.previous.state.name || 'root.home', $state.previous.params);
+            vm.cancel();
             toast.textContent('Signin Successful!').theme('toast-success');
             $mdToast.show(toast);
             vm.clearForm();
@@ -857,18 +832,23 @@
     .module('users')
     .controller('SignupAuthenticationController', SignupAuthenticationController);
 
-  SignupAuthenticationController.$inject = ['Authentication', 'PasswordValidator', '$state', '$location', '$mdToast', '$log'];
+  SignupAuthenticationController.$inject = ['Authentication', 'PasswordValidator', '$state', '$location', '$mdToast', '$mdDialog', '$log'];
 
-  function SignupAuthenticationController(Authentication, PasswordValidator, $state, $location, $mdToast, $log) {
+  function SignupAuthenticationController(Authentication, PasswordValidator, $state, $location, $mdToast, $mdDialog, $log) {
     var vm = this;
 
     vm.authentication = Authentication;
+    vm.cancel = cancel;
     vm.clearForm = clearForm;
     vm.error = undefined;
     vm.forms = {};
     vm.popoverMsg = PasswordValidator.getPopoverMsg();
     vm.signup = signup;
     vm.user = {};
+
+    function cancel() {
+      $mdDialog.cancel();
+    }
 
     function signup () {
       $log.debug('SignupAuthenticationController::signup', vm);
@@ -882,7 +862,7 @@
         .signup(vm.user)
         .then(
           function (response) {
-            $state.go('root.home');
+            vm.cancel();
             toast.textContent('Signup Successful!').theme('toast-success');
             $mdToast.show(toast);
             vm.clearForm();
@@ -942,25 +922,25 @@
     .module('users')
     .controller('UsersHeaderController', UsersHeaderController);
 
-  UsersHeaderController.$inject = ['$mdComponentRegistry', 'Authentication', '$log'];
+  UsersHeaderController.$inject = ['$mdComponentRegistry', 'Authentication', '$mdDialog', '$mdMedia', '$mdToast', '$state','$log'];
 
-  function UsersHeaderController($mdComponentRegistry, Authentication, $log) {
+  function UsersHeaderController($mdComponentRegistry, Authentication, $mdDialog, $mdMedia, $mdToast, $state, $log) {
     var vm = this;
 
     vm.authentication = Authentication;
     vm.isAdmin = false;
     vm.navigation = {};
+    vm.signin = signin;
+    vm.signup = signup;
+    vm.signout = signout;
+    vm.userMenu = {
+      open: false
+    };
 
     $mdComponentRegistry
       .when('coreLeftNav')
       .then(function(nav) {
         vm.navigation.left = nav;
-      });
-
-    $mdComponentRegistry
-      .when('coreRightNav')
-      .then(function(nav) {
-        vm.navigation.right = nav;
       });
 
     Authentication.ready
@@ -969,6 +949,45 @@
         $log.debug('UsersHeaderController::AuthReady', Authentication);
       });
 
+    function signin() {
+      var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+      $mdDialog.show({
+        controller: 'SigninAuthenticationController',
+        controllerAs: 'vm',
+        templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.signin.html',
+        clickOutsideToClose:true,
+        fullscreen: useFullScreen
+      });
+    }
+
+    function signup() {
+      var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+      $mdDialog.show({
+        controller: 'SignupAuthenticationController',
+        controllerAs: 'vm',
+        templateUrl: 'modern-mean-users-material/views/authentication/users.client.views.authentication.signup.html',
+        clickOutsideToClose:true,
+        fullscreen: useFullScreen
+      });
+
+    }
+
+    function signout() {
+      $log.debug('UserRightNavController::signout', vm);
+      Authentication.signout()
+        .then(function () {
+          $state.go('root.home');
+          var toast = $mdToast.simple()
+            .textContent('Signout Successful!')
+            .position('bottom right')
+            .hideDelay(6000)
+            .theme('toast-success');
+
+          $mdToast.show(toast);
+          $log.debug('UserRightNavController::success', Authentication);
+        });
+
+    }
 
     $log.info('UsersHeaderController::Init', vm);
   }
@@ -987,33 +1006,12 @@
     var vm = this;
 
     vm.authentication = Authentication;
-    vm.signout = signout;
 
     $mdComponentRegistry
       .when('coreRightNav')
       .then(function(nav) {
         vm.navigation = nav;
       });
-
-
-    function signout() {
-      $log.debug('UserRightNavController::signout', vm);
-      vm.navigation
-        .close()
-        .then(Authentication.signout)
-        .then(function () {
-          $state.go('root.user.authentication.type', { type: 'signin' });
-          var toast = $mdToast.simple()
-            .textContent('Signout Successful!')
-            .position('bottom right')
-            .hideDelay(6000)
-            .theme('toast-success');
-
-          $mdToast.show(toast);
-          $log.debug('UserRightNavController::success', Authentication);
-        });
-
-    }
 
 
     $log.info('UserRightNavController::Init', vm);
@@ -1395,7 +1393,7 @@
       responseError: function(rejection) {
         switch (rejection.status) {
           case 401:
-            $injector.get('$state').transitionTo('root.user.authentication.type', { type: 'signin' });
+            $injector.get('$state').transitionTo('root.home');
             $log.debug('Users::authInterceptor::401', rejection);
             break;
           case 403:

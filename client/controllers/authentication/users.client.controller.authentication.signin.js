@@ -5,17 +5,22 @@
     .module('users')
     .controller('SigninAuthenticationController', SigninAuthenticationController);
 
-  SigninAuthenticationController.$inject = ['Authentication', '$state', '$mdToast', '$log'];
+  SigninAuthenticationController.$inject = ['Authentication', '$state', '$mdToast', '$mdDialog','$log'];
 
-  function SigninAuthenticationController(Authentication, $state, $mdToast, $log) {
+  function SigninAuthenticationController(Authentication, $state, $mdToast, $mdDialog, $log) {
     var vm = this;
 
     vm.authentication = Authentication;
+    vm.cancel = cancel;
     vm.clearForm = clearForm;
     vm.credentials = {};
     vm.error = undefined;
     vm.forms = {};
     vm.signin = signin;
+
+    function cancel() {
+      $mdDialog.cancel();
+    }
 
     function signin () {
       vm.error = undefined;
@@ -28,7 +33,7 @@
         .signin(vm.credentials)
         .then(
           function (response) {
-            $state.go($state.previous.state.name || 'root.home', $state.previous.params);
+            vm.cancel();
             toast.textContent('Signin Successful!').theme('toast-success');
             $mdToast.show(toast);
             vm.clearForm();

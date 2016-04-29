@@ -1,4 +1,4 @@
-<md-toolbar layout="row" class="md-toolbar-tools md-whiteframe-z2">
+<md-toolbar layout="row" class="md-toolbar-tools md-whiteframe-z2 md-primary md-hue-2">
   <md-button ng-show="!vm.navigation.left.isLockedOpen()" class="md-fab md-mini md-accent md-raised" aria-label="Leftnav Menu" ng-click="vm.navigation.left.open()">
     <ng-md-icon icon="menu"></ng-md-icon>
   </md-button>
@@ -7,16 +7,43 @@
   <md-button class="md-fab md-mini md-warn" ng-show="vm.authentication.token && vm.isAdmin" class="md-icon-button" aria-label="Admin Dashboard" ui-sref="root.admin.dashboard">
     <ng-md-icon icon="security"></ng-md-icon>
   </md-button>
-  <md-button class="md-fab md-mini" ng-show="!vm.authentication.token" class="md-icon-button" aria-label="Rightnav Menu" ng-click="vm.navigation.right.toggle()">
-    <ng-md-icon icon="account_circle"></ng-md-icon>
-  </md-button>
 
-  <md-button  ng-show="vm.authentication.token" aria-label="Rightnav Menu" ng-click="vm.navigation.right.toggle()">
-    <md-list>
-       <md-list-item>
-         <img class="md-avatar" ng-src="{{vm.authentication.user.profileImageURL}}" alt="Profile Image" />
-         <span>{{vm.authentication.user.name.full}}</span>
-       </md-list-item>
-     </md-list>
-  </md-button>
+  <md-fab-speed-dial class="md-fling md-hover-full" md-open="vm.userMenu.open" md-direction="left" ng-mouseenter="vm.userMenu.open=true" ng-mouseleave="vm.userMenu.open=false">
+    <md-fab-trigger>
+      <md-button ng-if="!vm.authentication.token" class="md-fab" aria-label="User Menu">
+        <ng-md-icon icon="account_circle"></ng-md-icon>
+      </md-button>
+      <md-button ng-if="vm.authentication.token" aria-label="User Menu" >
+        <img style="border-radius: 50%;width: 60px;height: auto;" ng-src="{{vm.authentication.user.profileImageURL}}" alt="Profile Image" />
+      </md-button>
+    </md-fab-trigger>
+    <md-fab-actions ng-if="!vm.authentication.token">
+      <md-button aria-label="Sign In" class="md-fab md-raised md-mini md-primary md-hue-1" ng-click="vm.signin()">
+        <md-tooltip md-direction="bottom">
+          Sign In
+        </md-tooltip>
+        <ng-md-icon icon="person"></ng-md-icon>
+      </md-button>
+      <md-button aria-label="Sign Up" class="md-fab md-raised md-mini md-primary md-hue-1" ng-click="vm.signup()">
+        <md-tooltip md-direction="bottom">
+          Sign Up
+        </md-tooltip>
+        <ng-md-icon icon="person_add"></ng-md-icon>
+      </md-button>
+    </md-fab-actions>
+    <md-fab-actions ng-if="vm.authentication.token">
+      <md-button aria-label="User Settings" class="md-fab md-raised md-mini md-primary md-hue-1" ui-sref="root.user.settings">
+        <md-tooltip md-direction="bottom">
+          Profile
+        </md-tooltip>
+        <ng-md-icon icon="settings"></ng-md-icon>
+      </md-button>
+      <md-button aria-label="Sign Out" class="md-fab md-raised md-mini md-primary md-hue-1" ng-click="vm.signout()">
+        <md-tooltip md-direction="bottom">
+          Log Out
+        </md-tooltip>
+        <ng-md-icon icon="logout"></ng-md-icon>
+      </md-button>
+    </md-fab-actions>
+  </md-fab-speed-dial>
 </md-toolbar>

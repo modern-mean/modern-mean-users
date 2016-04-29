@@ -5,18 +5,23 @@
     .module('users')
     .controller('SignupAuthenticationController', SignupAuthenticationController);
 
-  SignupAuthenticationController.$inject = ['Authentication', 'PasswordValidator', '$state', '$location', '$mdToast', '$log'];
+  SignupAuthenticationController.$inject = ['Authentication', 'PasswordValidator', '$state', '$location', '$mdToast', '$mdDialog', '$log'];
 
-  function SignupAuthenticationController(Authentication, PasswordValidator, $state, $location, $mdToast, $log) {
+  function SignupAuthenticationController(Authentication, PasswordValidator, $state, $location, $mdToast, $mdDialog, $log) {
     var vm = this;
 
     vm.authentication = Authentication;
+    vm.cancel = cancel;
     vm.clearForm = clearForm;
     vm.error = undefined;
     vm.forms = {};
     vm.popoverMsg = PasswordValidator.getPopoverMsg();
     vm.signup = signup;
     vm.user = {};
+
+    function cancel() {
+      $mdDialog.cancel();
+    }
 
     function signup () {
       $log.debug('SignupAuthenticationController::signup', vm);
@@ -30,7 +35,7 @@
         .signup(vm.user)
         .then(
           function (response) {
-            $state.go('root.home');
+            vm.cancel();
             toast.textContent('Signup Successful!').theme('toast-success');
             $mdToast.show(toast);
             vm.clearForm();

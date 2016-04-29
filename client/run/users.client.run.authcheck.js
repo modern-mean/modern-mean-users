@@ -33,7 +33,7 @@
               if (Authentication.token !== undefined) {
                 $state.go('root.forbidden');
               } else {
-                $state.go('root.user.authentication.type', { type: 'signin' }).then(function () {
+                $state.go('root.home').then(function () {
                   $rootScope.storePreviousState(toState, toParams);
                 });
               }

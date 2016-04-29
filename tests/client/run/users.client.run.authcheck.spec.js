@@ -29,7 +29,7 @@
       it('should redirect to authentication.signin if they dont have access', function () {
         $state.transitionTo('root.admin.users');
         $rootScope.$digest();
-        expect($state.current.name).to.equal('root.user.authentication.type');
+        expect($state.current.name).to.equal('root.home');
       });
 
     });

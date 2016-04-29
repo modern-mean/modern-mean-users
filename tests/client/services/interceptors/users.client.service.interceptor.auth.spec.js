@@ -31,7 +31,7 @@
         Authentication.user.$get();
         $rootScope.$digest();
         $httpBackend.flush();
-        expect(stateSpy).to.have.been.calledWith('root.user.authentication.type', { type: 'signin' });
+        expect(stateSpy).to.have.been.calledWith('root.home');
       });
 
       it('should redirect to forbidden in on 403', function () {

@@ -9,7 +9,8 @@
     UsersHeaderController,
     $mdComponentRegistry,
     Authentication,
-    $q;
+    $q,
+    sandbox;
 
   describe('users.client.controller.navigation.header.js', function () {
 
@@ -22,7 +23,12 @@
       $compile = _$compile_;
       $mdComponentRegistry = _$mdComponentRegistry_;
       Authentication = _Authentication_;
+      sandbox = sinon.sandbox.create();
     }));
+
+    afterEach(function () {
+      sandbox.restore();
+    });
 
     describe('UsersHeaderController', function () {
 
@@ -57,12 +63,24 @@
         return $scope.vm.navigation.left.should.equal(leftNav);
       });
 
-      it('should set vm.navigation.right when ready', function () {
-        $compile('<md-sidenav md-component-id="coreRightNav" class="md-sidenav-right md-whiteframe-z2"></md-sidenav>')($rootScope);
-        $rootScope.$digest();
+      it('should have a vm.signout property that is a function', function () {
+        expect($scope.vm.signout).to.be.a('function');
+      });
 
-        var rightNav = $mdComponentRegistry.get('coreRightNav');
-        return $scope.vm.navigation.right.should.equal(rightNav);
+      describe('signout()', function () {
+
+        beforeEach(inject(function (_Authentication_) {
+          Authentication = _Authentication_;
+          Authentication.token = 'asdf';
+        }));
+
+        it('should redirect to signin route', function () {
+          var spy = sandbox.spy($state, 'go');
+          $scope.vm.signout();
+          $scope.$digest();
+          expect(spy).to.have.been.calledWith('root.home');
+        });
+
       });
 
     });

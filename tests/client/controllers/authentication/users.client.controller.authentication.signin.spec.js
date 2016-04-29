@@ -11,16 +11,18 @@
       $httpBackend,
       $state,
       $location,
+      $mdDialog,
       sandbox;
 
     beforeEach(module('users'));
 
-    beforeEach(inject(function(_$rootScope_, _$compile_, $controller, _Authentication_, _$httpBackend_, _$state_) {
+    beforeEach(inject(function(_$rootScope_, _$compile_, $controller, _Authentication_, _$httpBackend_, _$state_, _$mdDialog_) {
       $httpBackend = _$httpBackend_;
       $rootScope = _$rootScope_;
       $scope = $rootScope.$new();
       $state = _$state_;
       $compile = _$compile_;
+      $mdDialog = _$mdDialog_;
       Authentication = _Authentication_;
       SigninAuthenticationController = $controller('SigninAuthenticationController as vm', {
         $scope: $scope,
@@ -77,8 +79,8 @@
           expect(Authentication.authorization.roles).to.contain('surething');
         });
 
-        it('should redirect on success', function () {
-          var stateSpy = sandbox.spy($state, 'go');
+        it('should close the modal on success', function () {
+          var modalSpy = sandbox.spy($mdDialog, 'cancel');
           $httpBackend.expectPOST('/api/auth/signin').respond(200, { token: 'testtoken', user: { id: 'testid' } });
           $httpBackend.expectGET('/api/me').respond(200, { id: 'testid' });
           $httpBackend.expectGET('/api/me/authorization').respond(200, { roles: ['surething'] });
@@ -86,7 +88,7 @@
           $scope.vm.signin();
           $scope.$digest();
           $httpBackend.flush();
-          expect(stateSpy).to.have.been.called;
+          expect(modalSpy).to.have.been.called;
         });
 
         it('should set vm.error an error signup fails', function () {
