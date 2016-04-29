@@ -2,13 +2,13 @@
   <md-button ng-show="!vm.navigation.left.isLockedOpen()" class="md-fab md-mini md-accent md-raised" aria-label="Leftnav Menu" ng-click="vm.navigation.left.open()">
     <ng-md-icon icon="menu"></ng-md-icon>
   </md-button>
-  <span flex="none" style="font-weight: 900; font-size: 1.2em;letter-spacing: -.05em" hide-xs>MODERN-MEAN</span>
+  <span flex="none" style="font-weight: 900; font-size: 1.2em;letter-spacing: -.05em" hide-xs>MODERN-MEANa</span>
   <span flex></span>
   <md-button class="md-fab md-mini md-warn" ng-show="vm.authentication.token && vm.isAdmin" class="md-icon-button" aria-label="Admin Dashboard" ui-sref="root.admin.dashboard">
     <ng-md-icon icon="security"></ng-md-icon>
   </md-button>
 
-  <md-fab-speed-dial class="md-fling md-hover-full" md-open="vm.userMenu.open" md-direction="left" ng-mouseenter="vm.userMenu.open=true" ng-mouseleave="vm.userMenu.open=false">
+  <md-fab-speed-dial class="md-scale md-hover-full" md-open="vm.userMenu.open" md-direction="left" ng-mouseenter="vm.userMenu.open=true" ng-mouseleave="vm.userMenu.open=false">
     <md-fab-trigger>
       <md-button ng-if="!vm.authentication.token" class="md-fab md-mini" aria-label="User Menu">
         <ng-md-icon icon="account_circle"></ng-md-icon>
