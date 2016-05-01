@@ -13,6 +13,11 @@ import aclModule from './config/acl';
 function init(app) {
   logger.debug('Users::Init::Start');
 
+  if (config.modules.users !== 'true') {
+    logger.debug('Users::Init::Disabled');
+    return Promise.resolve();
+  }
+
   let modelInit = new Promise(function (resolve, reject) {
     logger.debug('Users::Init::Model::Start');
     userModel

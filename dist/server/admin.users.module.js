@@ -21,11 +21,17 @@ var _acl = require('./config/acl');
 
 var _acl2 = _interopRequireDefault(_acl);
 
+var _config = require('./config/config');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function init(app) {
   return new Promise(function (resolve, reject) {
     _logger2.default.debug('UsersAdmin::Init::Start');
+    if (_config.config.modules.admin !== 'true') {
+      _logger2.default.debug('UsersAdmin::Init::Disabled');
+      return resolve();
+    }
 
     _adminServer4.default.policy().then(() => {
       _adminServer2.default.init(app).then(() => {

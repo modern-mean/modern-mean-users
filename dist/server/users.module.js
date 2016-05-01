@@ -40,6 +40,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function init(app) {
   _logger2.default.debug('Users::Init::Start');
 
+  if (_config.config.modules.users !== 'true') {
+    _logger2.default.debug('Users::Init::Disabled');
+    return Promise.resolve();
+  }
+
   let modelInit = new Promise(function (resolve, reject) {
     _logger2.default.debug('Users::Init::Model::Start');
     _usersServerModel2.default.init().then(function (model) {

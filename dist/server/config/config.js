@@ -7,6 +7,16 @@ let config;
 
 function load() {
   return exports.config = config = {
+    modules: {
+      users: process.env.MEAN_USERS_ENABLE || 'true',
+      admin: process.env.MEAN_USERS_ADMIN_ENABLE || 'true'
+    },
+    jwt: {
+      secret: process.env.MEAN_USERS_JWT_SECRET || 'MODERN!MEAN!t0p$3cr37!t0k3n',
+      options: { //Anything From https://www.npmjs.com/package/jsonwebtoken
+        expiresIn: process.env.MEAN_USERS_JWT_EXPIRES || '1d'
+      }
+    },
     logs: {
       //https://github.com/winstonjs/winston
       winston: {
@@ -25,12 +35,6 @@ function load() {
         limits: {
           fileSize: process.env.MEAN_USERS_PROFILE_SIZE || '1045876' // Max file size in bytes (1 MB)
         }
-      }
-    },
-    jwt: {
-      secret: process.env.MEAN_USERS_JWT_SECRET || 'MODERN!MEAN!t0p$3cr37!t0k3n',
-      options: { //Anything From https://www.npmjs.com/package/jsonwebtoken
-        expiresIn: process.env.MEAN_USERS_JWT_EXPIRES || '1d'
       }
     }
   };
