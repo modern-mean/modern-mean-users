@@ -12,14 +12,6 @@ let sandbox;
 
 describe('/modules/users/server/users.module.js', () => {
 
-  before(() => {
-    return expressModule.init();
-  });
-
-  after(() => {
-    return expressModule.destroy();
-  });
-
   beforeEach(() => {
     return sandbox = sinon.sandbox.create();
   });
@@ -48,7 +40,7 @@ describe('/modules/users/server/users.module.js', () => {
           app = expressModule.getExpressApp();
           mockModel = sandbox.stub(userModel, 'init').resolves();
           mockSeed = sandbox.stub(userSeed, 'init');
-          process.env.MEAN_USERS_SEED = true;
+          process.env.MM_USERS_MONGOOSE_SEED = true;
           config.load();
           return users.init(app);
         });

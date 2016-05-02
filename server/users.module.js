@@ -7,13 +7,13 @@ import userRoutes from './routes/users.server.routes';
 import authRoutes from './routes/auth.server.routes';
 import authentication from './authentication/authentication';
 import { config } from './config/config';
-import aclModule from './config/acl';
+
 
 
 function init(app) {
   logger.debug('Users::Init::Start');
 
-  if (config.modules.users !== 'true') {
+  if (config.modules.users.enable !== 'true') {
     logger.debug('Users::Init::Disabled');
     return Promise.resolve();
   }

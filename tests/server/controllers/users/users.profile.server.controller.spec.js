@@ -1,6 +1,5 @@
 'use strict';
 
-import { mongoose } from 'modern-mean-core-material/dist/server/app/mongoose';
 import lodash from 'lodash';
 import * as profileController from '../../../../server/controllers/users/users.profile.server.controller';
 import userModel from '../../../../server/models/users.server.model.user';

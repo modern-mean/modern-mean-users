@@ -23,8 +23,6 @@ var _usersServerModel2 = _interopRequireDefault(_usersServerModel);
 
 var _acl = require('../../config/acl.js');
 
-var _acl2 = _interopRequireDefault(_acl);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // URLs for which user can't be redirected on signin
@@ -49,7 +47,7 @@ function signup(req, res) {
   user.emails.push(email);
 
   return user.save().then(user => {
-    return _acl2.default.get().addUserRoles(user._id.toString(), 'user').then(() => {
+    return _acl.acl.addUserRoles(user._id.toString(), 'user').then(() => {
       return _jwtToken2.default.signToken(user);
     }).then(function (token) {
       return res.json({ token: token });

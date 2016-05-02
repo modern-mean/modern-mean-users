@@ -9,7 +9,7 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _mongoose = require('modern-mean-core-material/dist/server/app/mongoose');
+var _mongoose = require('../config/mongoose');
 
 var _usersServerModel = require('../models/users.server.model.user');
 

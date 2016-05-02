@@ -1,12 +1,11 @@
 'use strict';
 
-import { express } from 'modern-mean-core-material/dist/server/app/express';
 import adminRoutes from '../../server/routes/admin.server.routes';
 import adminPolicy from '../../server/policies/admin.server.policy';
 import * as adminUsers from '../../server/admin.users.module';
-import mongooseModule from 'modern-mean-core-material/dist/server/app/mongoose';
 
-let sandbox;
+let sandbox,
+  app = express();
 
 describe('/modules/users/server/admin.users.module.js', () => {
 
@@ -29,12 +28,11 @@ describe('/modules/users/server/admin.users.module.js', () => {
     });
 
     describe('init()', () => {
-      let routesStub, policyStub, app;
+      let routesStub, policyStub;
 
       describe('success', () => {
 
         beforeEach(() => {
-          app = express;
           routesStub = sandbox.stub(adminRoutes, 'init').resolves();
           policyStub = sandbox.stub(adminPolicy, 'policy').resolves();
         });
@@ -66,7 +64,6 @@ describe('/modules/users/server/admin.users.module.js', () => {
           let policyStub;
 
           beforeEach(() => {
-            app = express;
             policyStub = sandbox.stub(adminPolicy, 'policy').rejects('Error!');
           });
 
@@ -80,7 +77,7 @@ describe('/modules/users/server/admin.users.module.js', () => {
           let routesStub, policyStub;
 
           beforeEach(() => {
-            app = express;
+
             policyStub = sandbox.stub(adminPolicy, 'policy').resolves();
             routesStub = sandbox.stub(adminRoutes, 'init').rejects('Error!');
           });

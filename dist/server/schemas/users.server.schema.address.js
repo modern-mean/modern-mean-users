@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _mongoose = require('modern-mean-core-material/dist/server/app/mongoose');
+var _mongoose = require('../config/mongoose');
 
 var _validator = require('validator');
 

@@ -1,17 +1,17 @@
 'use strict';
 
 import passport from 'passport';
-import { express } from 'modern-mean-core-material/dist/server/app/express';
+import express from 'express';
 import logger from '../config/logger';
 import nodeacl from 'acl';
-import aclModule from '../config/acl';
+import { acl } from '../config/acl';
 import * as admin from '../controllers/admin.server.controller';
+import { config } from '../config/config';
 
 function init(app) {
   return new Promise((resolve, reject) => {
-    logger.debug('Users::Routes::Admin::Start');
+    logger.debug('UsersAdmin::Routes::Start');
     let router = express.Router();
-    let acl = aclModule.get();
 
     //Set JWT Auth for all user Routes
     router.all('*', passport.authenticate('jwt', { session: false }));
@@ -28,9 +28,9 @@ function init(app) {
     // Finish by binding the user middleware
     router.param('userId', admin.userByID);
 
-    app.use('/api/users', router);
+    app.use(config.modules.admin.api.endpoint, router);
 
-    logger.verbose('Users::Routes::Admin::Success');
+    logger.verbose('UsersAdmin::Routes::Success');
     return resolve(app);
   });
 }

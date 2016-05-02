@@ -1,7 +1,7 @@
 'use strict';
 
 import * as adminPolicy from '../../../server/policies/admin.server.policy';
-import aclModule from '../../../server/config/acl';
+import { acl } from '../../../server/config/acl';
 
 let sandbox;
 
@@ -28,13 +28,10 @@ describe('/modules/users/server/policies/admin.server.policy.js', () => {
     describe('policy()', () => {
 
       describe('success', () => {
-        let aclStub, mockAcl, promise;
+        let promise, aclSpy;
 
         beforeEach(() => {
-          mockAcl = {
-            allow: sandbox.stub().resolves()
-          };
-          aclStub = sandbox.stub(aclModule, 'get').resolves(mockAcl);
+          aclSpy = sandbox.spy(acl, 'allow');
           promise = adminPolicy.policy();
           return promise;
         });
@@ -44,7 +41,7 @@ describe('/modules/users/server/policies/admin.server.policy.js', () => {
         });
 
         it('should call acl allow', () => {
-          return mockAcl.allow.should.have.been.calledWith([{
+          return aclSpy.should.have.been.calledWith([{
             roles: ['admin'],
             allows: [{
               resources: '/api/users',
@@ -56,14 +53,10 @@ describe('/modules/users/server/policies/admin.server.policy.js', () => {
       });
 
       describe('error', () => {
-        let aclStub, mockAcl;
+        let aclStub;
 
         beforeEach(() => {
-          mockAcl = {
-            allow: sandbox.stub().rejects('Error!')
-          };
-          return aclStub = sandbox.stub(aclModule, 'get').resolves(mockAcl);
-
+          return aclStub = sandbox.stub(acl, 'allow').rejects('Error!');
         });
 
         it('should reject a promise', () => {

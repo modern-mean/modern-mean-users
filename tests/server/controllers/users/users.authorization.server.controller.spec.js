@@ -1,8 +1,7 @@
 'use strict';
 
-import { mongoose } from 'modern-mean-core-material/dist/server/app/mongoose';
 import * as authorizationController from '../../../../server/controllers/users/users.authorization.server.controller';
-import aclModule from '../../../../server/config/acl';
+import { acl } from '../../../../server/config/acl';
 import userModel from '../../../../server/models/users.server.model.user';
 
 let sandbox;
@@ -10,8 +9,7 @@ let sandbox;
 describe('/modules/users/server/controllers/users/users.authorization.server.controller.js', () => {
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-    return userModel.init();
+    return sandbox = sinon.sandbox.create();
   });
 
   afterEach(() => {
@@ -29,7 +27,7 @@ describe('/modules/users/server/controllers/users/users.authorization.server.con
     });
 
     describe('read()', () => {
-      let mockReq, mockRes, mockUser, mockAcl, aclStub, user, model;
+      let mockReq, mockRes, mockUser, rolesStub, resourcesStub, user, model;
 
       beforeEach(() => {
         model = mongoose.model('User');
@@ -48,20 +46,17 @@ describe('/modules/users/server/controllers/users/users.authorization.server.con
       describe('success', () => {
 
         beforeEach(() => {
-          mockAcl = {
-            userRoles: sandbox.stub().resolves(['user']),
-            whatResources: sandbox.stub().resolves(['test'])
-          };
-          aclStub = sandbox.stub(aclModule, 'get').returns(mockAcl);
+          rolesStub = sandbox.stub(acl, 'userRoles').resolves(['user']);
+          resourcesStub = sandbox.stub(acl, 'whatResources').resolves(['test']);
           return authorizationController.read(mockReq, mockRes);
         });
 
         it('should call acl userRoles', () => {
-          return mockAcl.userRoles.should.have.been.calledWith(user._id.toString());
+          return rolesStub.should.have.been.calledWith(user._id.toString());
         });
 
         it('should call acl whatResources', () => {
-          return mockAcl.whatResources.should.have.been.calledWith(['user']);
+          return resourcesStub.should.have.been.calledWith(['user']);
         });
 
         it('should call res.json', () => {
@@ -73,10 +68,7 @@ describe('/modules/users/server/controllers/users/users.authorization.server.con
       describe('error', () => {
 
         beforeEach(() => {
-          mockAcl = {
-            userRoles: sandbox.stub().rejects('Error!')
-          };
-          aclStub = sandbox.stub(aclModule, 'get').returns(mockAcl);
+          rolesStub = sandbox.stub(acl, 'userRoles').rejects('Error!');
           return authorizationController.read(mockReq, mockRes);
         });
 

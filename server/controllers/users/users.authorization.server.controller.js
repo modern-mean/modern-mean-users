@@ -1,20 +1,18 @@
 'use strict';
 
-import aclModule from '../../config/acl';
+import { acl } from '../../config/acl';
 
 function read(req, res) {
   let response = {};
 
-  return aclModule
-    .get()
+  return acl
     .userRoles(req.user._id.toString())
     .then(roles => {
       response.roles = roles;
       return roles;
     })
     .then(roles => {
-      return aclModule
-        .get()
+      return acl
         .whatResources(roles)
         .then(resources => {
           response.resources = resources;

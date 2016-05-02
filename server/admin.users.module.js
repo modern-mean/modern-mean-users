@@ -1,34 +1,35 @@
 'use strict';
 
 import logger from './config/logger';
+import { ready as aclReady } from './config/acl';
 import adminRoutes from './routes/admin.server.routes';
 import adminPolicy from './policies/admin.server.policy';
-import aclModule from './config/acl';
 import { config } from './config/config';
 
 function init(app) {
   return new Promise(function(resolve, reject) {
-    logger.debug('UsersAdmin::Init::Start');
-    if (config.modules.admin !== 'true') {
+    logger.debug('UsersAdmin::Init::Pre');
+    if (config.modules.admin.enable !== 'true') {
       logger.debug('UsersAdmin::Init::Disabled');
       return resolve();
     }
 
-    adminPolicy.policy()
+    //Preinit
+    let preInit = Promise.all([aclReady]);
+
+
+    return preInit
       .then(() => {
-        adminRoutes.init(app)
+        logger.debug('UsersAdmin::Init::Start');
+        Promise.all([adminPolicy.policy(), adminRoutes.init(app)])
           .then(() => {
-            logger.verbose('UsersAdmin::Routes::Success');
+            logger.verbose('UsersAdmin::Init::Success');
             return resolve(app);
           })
           .catch(err => {
-            logger.error(err);
+            logger.error('UsersAdmin::Init::Error', err);
             return reject(err);
           });
-      })
-      .catch(err => {
-        logger.error(err);
-        return reject(err);
       });
 
   });

@@ -2,12 +2,12 @@
   'use strict';
 
   angular
-    .module('users')
+    .module('users.services')
     .service('Authentication', Authentication);
 
-  Authentication.$inject = ['$q', '$resource', '$http', '$location', '$state', 'User', 'Authorization', '$log'];
+  Authentication.$inject = ['$q', '$resource', '$http', '$location', '$state', 'User', 'Authorization', 'MODULES', '$log'];
 
-  function Authentication($q, $resource, $http, $location, $state, User, Authorization, $log) {
+  function Authentication($q, $resource, $http, $location, $state, User, Authorization, MODULES, $log) {
 
 
     var readyPromise = $q.defer();
@@ -26,16 +26,16 @@
     };
 
     function changePassword(credentials) {
-      return $resource('/api/me/password').save(credentials);
+      return $resource(MODULES.users.api.endpoints.me + '/password').save(credentials);
     }
 
     function forgotPassword(credentials) {
-      return $resource('/api/auth/forgot').save(credentials);
+      return $resource(MODULES.users.api.endpoints.auth + '/forgot').save(credentials);
     }
 
     function passwordReset(token, credentials) {
       //TODO This probably doesn't work.  Not sending in token.  Should change to a JWT Token anyway
-      return $resource('/api/auth/reset').save(credentials);
+      return $resource(MODULES.users.api.endpoints.auth + '/reset').save(credentials);
     }
 
     function signout() {
@@ -51,7 +51,7 @@
 
     function signin(credentials) {
       return $q(function(resolve, reject) {
-        $resource('/api/auth/signin')
+        $resource(MODULES.users.api.endpoints.auth + '/signin')
           .save(credentials).$promise
           .then(
             function (auth) {
@@ -68,7 +68,7 @@
 
     function signup(credentials) {
       return $q(function(resolve, reject) {
-        $resource('/api/auth/signup')
+        $resource(MODULES.users.api.endpoints.auth + '/signup')
           .save(credentials).$promise
           .then(
             function (auth) {

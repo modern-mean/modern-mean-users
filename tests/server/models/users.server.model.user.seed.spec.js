@@ -2,21 +2,12 @@
 
 import * as userSeed from '../../../server/models/users.server.model.user.seed';
 import userModel from '../../../server/models/users.server.model.user';
-import mongooseModule from 'modern-mean-core-material/dist/server/app/mongoose';
 import aclModule from '../../../server/config/acl';
 
 let sandbox;
 
 describe('/modules/users/server/models/users.server.model.user.seed.js', () => {
 
-  before(() => {
-    return mongooseModule.connect()
-      .then(Promise.all([aclModule.init(), userModel.init()]));
-  });
-
-  after(() => {
-    return mongooseModule.disconnect();
-  });
 
   beforeEach(() => {
     return sandbox = sinon.sandbox.create();

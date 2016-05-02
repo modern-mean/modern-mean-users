@@ -34,14 +34,17 @@ function strategy() {
       passwordField: 'password'
     }, function (email, password, done) {
       let User = _usersServerModel2.default.getModels().user;
+      _logger2.default.debug('Users::Authentication::Local::User', email, password);
       User.findOne({ 'providers.type': 'local', 'providers.email': email.toLowerCase() }).then(user => {
         if (!user) {
+          _logger2.default.debug('Users::Authentication::Local::UserNotFound');
           return done('Invalid email or password', false);
         }
 
         let localProvider = _lodash2.default.find(user.providers, { type: 'local' });
 
         if (!localProvider || !localProvider.authenticate(password)) {
+          _logger2.default.debug('Users::Authentication::Local::Wrong Password');
           return done('Invalid email or password', false);
         }
 

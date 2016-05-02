@@ -5,7 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.init = undefined;
 
-var _express = require('modern-mean-core-material/dist/server/app/express');
+var _express = require('express');
+
+var _express2 = _interopRequireDefault(_express);
 
 var _passport = require('passport');
 
@@ -21,17 +23,19 @@ var _usersServerModel = require('../models/users.server.model.user');
 
 var _usersServerModel2 = _interopRequireDefault(_usersServerModel);
 
+var _config = require('../config/config');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function init(app) {
   return new Promise(function (resolve, reject) {
     _logger2.default.debug('Users::Routes::Authentication::Start');
-    let router = _express.express.Router();
+    let router = _express2.default.Router();
 
     router.route('/signup').post(_usersServerModel2.default.create, _usersServer.authentication.signup);
     router.route('/signin').post(_passport2.default.authenticate('local', { session: false }), _usersServer.authentication.signin);
 
-    app.use('/api/auth', router);
+    app.use(_config.config.modules.users.api.endpoints.auth, router);
     _logger2.default.verbose('Users::Routes::Authentication::Success');
     return resolve(app);
   });

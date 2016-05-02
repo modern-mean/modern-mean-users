@@ -6,10 +6,10 @@
     .module('users.admin')
     .factory('UserAdmin', UserAdmin);
 
-  UserAdmin.$inject = ['$resource'];
+  UserAdmin.$inject = ['$resource', 'MODULES'];
 
-  function UserAdmin($resource) {
-    return $resource('/api/users/:userId', {
+  function UserAdmin($resource, MODULES) {
+    return $resource(MODULES.admin.api.endpoint + '/:userId', {
       userId: '@_id'
     }, {
       update: {

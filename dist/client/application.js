@@ -2,7 +2,9 @@
   'use strict';
 
   app.registerModule('users', ['core', 'ngFileUpload']);
-  app.registerModule('users.routes', ['core.routes']);
+  app.registerModule('users.config', ['core.config']);
+  app.registerModule('users.services', ['users.config']);
+  app.registerModule('users.routes', ['core.routes', 'users.config']);
   app.registerModule('users.admin', ['core']);
   app.registerModule('users.admin.routes', ['core.routes']);
 
@@ -19,6 +21,13 @@
   function usersConfig($httpProvider) {
     $httpProvider.interceptors.push('authInterceptor');
   }
+
+})();
+
+(function () { 
+ return angular.module("users.config")
+.constant("MODULES", {"users":{"enable":"true","api":{"hostname":"","endpoints":{"me":"/api/me","auth":"/api/auth"}}},"admin":{"enable":"true","api":{"hostname":"","endpoint":"/api/users"}}})
+.constant("SOCIAL", {"facebook":{"enable":"false","callback":"/api/auth/facebook/callback"},"twitter":{"enable":"false","callback":"/api/auth/twitter/callback"},"google":{"enable":"false","callback":"/api/auth/google/callback"},"linkedin":{"enable":"false","callback":"/api/auth/google/callback"},"github":{"enable":"false","callback":"/api/auth/google/callback"}});
 
 })();
 
@@ -218,6 +227,12 @@
   function getUser(Authentication) {
     return Authentication.user;
   }
+
+})();
+
+(function () { 
+ return angular.module("users.config")
+.value("UPLOAD", {"profile":{"destination":"./public/img/profile/uploads/","public":"/img/profile/uploads/","limits":{"fileSize":"1045876"}}});
 
 })();
 
@@ -471,10 +486,10 @@
     .module('users.admin')
     .factory('UserAdmin', UserAdmin);
 
-  UserAdmin.$inject = ['$resource'];
+  UserAdmin.$inject = ['$resource', 'MODULES'];
 
-  function UserAdmin($resource) {
-    return $resource('/api/users/:userId', {
+  function UserAdmin($resource, MODULES) {
+    return $resource(MODULES.admin.api.endpoint + '/:userId', {
       userId: '@_id'
     }, {
       update: {
@@ -488,12 +503,12 @@
   'use strict';
 
   angular
-    .module('users')
+    .module('users.services')
     .service('Authentication', Authentication);
 
-  Authentication.$inject = ['$q', '$resource', '$http', '$location', '$state', 'User', 'Authorization', '$log'];
+  Authentication.$inject = ['$q', '$resource', '$http', '$location', '$state', 'User', 'Authorization', 'MODULES', '$log'];
 
-  function Authentication($q, $resource, $http, $location, $state, User, Authorization, $log) {
+  function Authentication($q, $resource, $http, $location, $state, User, Authorization, MODULES, $log) {
 
 
     var readyPromise = $q.defer();
@@ -512,16 +527,16 @@
     };
 
     function changePassword(credentials) {
-      return $resource('/api/me/password').save(credentials);
+      return $resource(MODULES.users.api.endpoints.me + '/password').save(credentials);
     }
 
     function forgotPassword(credentials) {
-      return $resource('/api/auth/forgot').save(credentials);
+      return $resource(MODULES.users.api.endpoints.auth + '/forgot').save(credentials);
     }
 
     function passwordReset(token, credentials) {
       //TODO This probably doesn't work.  Not sending in token.  Should change to a JWT Token anyway
-      return $resource('/api/auth/reset').save(credentials);
+      return $resource(MODULES.users.api.endpoints.auth + '/reset').save(credentials);
     }
 
     function signout() {
@@ -537,7 +552,7 @@
 
     function signin(credentials) {
       return $q(function(resolve, reject) {
-        $resource('/api/auth/signin')
+        $resource(MODULES.users.api.endpoints.auth + '/signin')
           .save(credentials).$promise
           .then(
             function (auth) {
@@ -554,7 +569,7 @@
 
     function signup(credentials) {
       return $q(function(resolve, reject) {
-        $resource('/api/auth/signup')
+        $resource(MODULES.users.api.endpoints.auth + '/signup')
           .save(credentials).$promise
           .then(
             function (auth) {
@@ -624,7 +639,7 @@
   'use strict';
 
   angular
-    .module('users')
+    .module('users.services')
     .factory('Authorization', Authorization);
 
   Authorization.$inject = ['$resource'];
@@ -641,7 +656,7 @@
 
   // PasswordValidator service used for testing the password strength
   angular
-    .module('users')
+    .module('users.services')
     .factory('PasswordValidator', PasswordValidator);
 
   PasswordValidator.$inject = ['$window'];
@@ -666,20 +681,20 @@
   'use strict';
 
   angular
-    .module('users')
+    .module('users.services')
     .factory('User', User);
 
-  User.$inject = ['$resource'];
+  User.$inject = ['$resource', 'MODULES'];
 
-  function User($resource) {
+  function User($resource, MODULES) {
 
-    return $resource('/api/me', {}, {
+    return $resource(MODULES.users.api.endpoints.me, {}, {
       addresses: {
-        url: '/api/me/addresses',
+        url: MODULES.users.api.endpoints.me + '/addresses',
         method: 'PUT'
       },
       emails: {
-        url: '/api/me/emails',
+        url: MODULES.users.api.endpoints.me + '/emails',
         method: 'PUT'
       },
       update: {
@@ -1411,7 +1426,7 @@
   'use strict';
 
   angular
-    .module('users.routes')
+    .module('users.services')
     .factory('authInterceptor', authInterceptor);
 
   authInterceptor.$inject = ['$q', '$injector', '$log'];

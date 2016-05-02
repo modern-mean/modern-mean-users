@@ -4,7 +4,7 @@ import passport from 'passport';
 import lodash from 'lodash';
 import authentication from '../../authentication/jwtToken';
 import userModel from '../../models/users.server.model.user';
-import aclModule from '../../config/acl.js';
+import { acl } from '../../config/acl.js';
 
 // URLs for which user can't be redirected on signin
 let noReturnUrls = [
@@ -33,8 +33,7 @@ function signup(req, res) {
 
   return user.save()
     .then(user => {
-      return aclModule
-        .get()
+      return acl
         .addUserRoles(user._id.toString(), 'user')
         .then(() => {
           return authentication.signToken(user);

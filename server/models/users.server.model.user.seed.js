@@ -3,7 +3,7 @@
 import chalk from 'chalk';
 import logger from '../config/logger';
 import userModel from './users.server.model.user';
-import aclModule from '../config/acl.js';
+import { acl } from '../config/acl.js';
 
 let users = {};
 
@@ -45,31 +45,39 @@ function getUser(template) {
     User.findOne({ 'providers.email': template.email, 'providers.type': 'local' })
       .then(user => {
         if (!user) {
-          resolve(new User(template));
+          logger.debug('Users::Model::Seed::getUser::Creating');
+          return resolve(new User(template));
         }
-        resolve(user);
+        logger.debug('Users::Model::Seed::getUser::Found');
+        return resolve(user);
+      })
+      .catch(err => {
+        logger.error('Users::Model::Seed::getUser', err);
+        reject(err);
       });
   });
 }
 
-function seedUser() {
+function seedUser(template) {
   return new Promise((resolve, reject) => {
     logger.debug('Users::Model::Seed::User::Start');
     let LocalProvider = userModel.getModels().provider;
     let Email = userModel.getModels().email;
-
+    if (!template) {
+      template = userTemplate;
+    }
     let passwordPromise = LocalProvider.generateRandomPassphrase();
-    let userPromise = getUser(userTemplate);
+    let userPromise = getUser(template);
 
     Promise.all([passwordPromise, userPromise])
       .then(promises => {
         let user = promises[1];
-        let password = promises[0];
+        let password = template.password || promises[0];
 
         //Set email if its not set
         if (user.emails.length === 0) {
           let email = new userModel.getModels().email({
-            email: userTemplate.email,
+            email: template.email,
             primary: true
           });
           user.emails.push(email);
@@ -85,6 +93,7 @@ function seedUser() {
             postalCode: '90210',
             country: 'US'
           });
+          logger.debug('Users::Model::Seed::Address::Added');
           user.addresses.push(address);
         }
 
@@ -93,31 +102,30 @@ function seedUser() {
         //Set provider
         let provider = new LocalProvider({
           type: 'local',
-          email: userTemplate.email,
+          email: template.email,
           clearpassword: password
         });
 
         user.providers.push(provider);
         logger.debug('Users::Model::Seed::User::PreSave');
-        user.save()
+        return user.save()
           .then(() => {
-            aclModule
-              .get()
-              .addUserRoles(user._id.toString(), ['user'])
-              .then(() => {
-                users.user = user.toObject();
-                users.user.password = password;
-                logger.info('Users::Model::Seed::User::' + chalk.bold.magenta(user.emails[0].email + ':' + password));
-                resolve(user);
-              })
-              .catch(err => {
-                console.log(chalk.bold.red('Users::Model::Seed::User::Role::Error::' + err));
-                reject(err);
-              });
+            logger.debug('Users::Model::Seed::User::PostSave');
+            return acl.addUserRoles(user._id.toString(), ['user'])
+                .then(() => {
+                  users.user = user.toObject();
+                  users.user.password = password;
+                  logger.info('Users::Model::Seed::User::' + chalk.bold.magenta(user.providers[0].email + ':' + password));
+                  return resolve(user);
+                })
+                .catch(err => {
+                  console.log(chalk.bold.red('Users::Model::Seed::User::Role::Error::' + err));
+                  return reject(err);
+                });
           })
           .catch(err => {
             console.log(chalk.bold.red('Users::Model::Seed::User::Error::' + err));
-            reject(err);
+            return reject(err);
           });
 
 
@@ -162,19 +170,18 @@ function seedAdmin() {
 
         user.save()
           .then(() => {
-            aclModule
-              .get()
-              .addUserRoles(user._id.toString(), ['admin'])
-              .then(() => {
-                users.admin = user.toObject();
-                users.admin.password = password;
-                logger.info('Users::Model::Seed::User::' + chalk.bold.magenta(user.emails[0].email + ':' + password));
-                resolve(user);
-              })
-              .catch(err => {
-                console.log(chalk.bold.red('Users::Model::Seed::Admin::Role::Error::' + err));
-                reject(err);
-              });
+            acl
+            .addUserRoles(user._id.toString(), ['admin'])
+            .then(() => {
+              users.admin = user.toObject();
+              users.admin.password = password;
+              logger.info('Users::Model::Seed::User::' + chalk.bold.magenta(user.emails[0].email + ':' + password));
+              resolve(user);
+            })
+            .catch(err => {
+              console.log(chalk.bold.red('Users::Model::Seed::Admin::Role::Error::' + err));
+              reject(err);
+            });
 
           })
           .catch(err => {

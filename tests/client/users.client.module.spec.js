@@ -12,7 +12,7 @@
     it('should have created the users.routes module', function () {
       expect(angular.module('users.routes')).to.be.an('object');
       expect(angular.module('users.routes').name).to.equal('users.routes');
-      expect(angular.module('users.routes').requires.length).to.equal(1);
+      expect(angular.module('users.routes').requires.length).to.equal(2);
       expect(angular.module('users.routes').requires).to.include('core.routes');
     });
 

@@ -1,10 +1,11 @@
 'use strict';
 
-import { express } from 'modern-mean-core-material/dist/server/app/express';
+import express from 'express';
 import passport from 'passport';
 import logger from '../config/logger';
 import { authentication } from '../controllers/users.server.controller';
 import userModel from '../models/users.server.model.user';
+import { config } from '../config/config';
 
 function init(app) {
   return new Promise(function (resolve, reject) {
@@ -14,7 +15,7 @@ function init(app) {
     router.route('/signup').post(userModel.create, authentication.signup);
     router.route('/signin').post(passport.authenticate('local', { session: false }), authentication.signin);
 
-    app.use('/api/auth', router);
+    app.use(config.modules.users.api.endpoints.auth, router);
     logger.verbose('Users::Routes::Authentication::Success');
     return resolve(app);
   });

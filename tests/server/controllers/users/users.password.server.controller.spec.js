@@ -1,6 +1,5 @@
 'use strict';
 
-import { mongoose } from 'modern-mean-core-material/dist/server/app/mongoose';
 import * as passwordController from '../../../../server/controllers/users/users.password.server.controller';
 import userModel from '../../../../server/models/users.server.model.user';
 

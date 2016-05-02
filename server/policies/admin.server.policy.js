@@ -1,32 +1,26 @@
 'use strict';
 
 import logger from '../config/logger';
-import aclModule from '../config/acl';
+import { ready as aclReady, acl } from '../config/acl';
 
 function policy() {
   return new Promise((resolve, reject) => {
-    logger.debug('Users::Policy::Admin::Start');
-    aclModule
-      .get()
-      .then(acl => {
-        acl.allow([{
-          roles: ['admin'],
-          allows: [{
-            resources: '/api/users',
-            permissions: '*'
-          }]
-        }])
-        .then(() => {
-          logger.verbose('Users::Routes::Admin::Success');
-          return resolve();
-        })
-        .catch(err => {
-          logger.error(err);
-          return reject(err.message);
-        });
-      });
-
-
+    logger.debug('UsersAdmin::Policy::Start');
+    acl.allow([{
+      roles: ['admin'],
+      allows: [{
+        resources: '/api/users',
+        permissions: '*'
+      }]
+    }])
+    .then(() => {
+      logger.verbose('UsersAdmin::Policy::Success');
+      return resolve();
+    })
+    .catch(err => {
+      logger.error(err);
+      return reject(err.message);
+    });
   });
 }
 

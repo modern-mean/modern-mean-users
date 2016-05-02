@@ -31,16 +31,12 @@ var _authentication2 = _interopRequireDefault(_authentication);
 
 var _config = require('./config/config');
 
-var _acl = require('./config/acl');
-
-var _acl2 = _interopRequireDefault(_acl);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function init(app) {
   _logger2.default.debug('Users::Init::Start');
 
-  if (_config.config.modules.users !== 'true') {
+  if (_config.config.modules.users.enable !== 'true') {
     _logger2.default.debug('Users::Init::Disabled');
     return Promise.resolve();
   }

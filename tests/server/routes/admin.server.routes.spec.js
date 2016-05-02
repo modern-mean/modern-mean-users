@@ -1,10 +1,8 @@
 'use strict';
 
-import { express } from 'modern-mean-core-material/dist/server/app/express';
 import * as adminRoutes from '../../../server/routes/admin.server.routes.js';
 import adminController from '../../../server/controllers/admin.server.controller';
 import userModel from '../../../server/models/users.server.model.user';
-import aclModule from '../../../server/config/acl';
 
 let sandbox;
 
@@ -12,11 +10,6 @@ describe('modules/users/server/routes/admin.server.routes.js', () => {
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    sandbox.stub(aclModule, 'get').returns({
-      middleware: sandbox.stub().returns(function (req, res, next) {
-        next();
-      })
-    });
   });
 
   afterEach(() => {
@@ -36,10 +29,9 @@ describe('modules/users/server/routes/admin.server.routes.js', () => {
   });
 
   describe('init', () => {
-    let app, routerStub, mockRouter, expressSpy;
+    let routerStub, mockRouter, expressSpy;
 
     beforeEach(() => {
-      app = express();
       mockRouter = express.Router();
       sandbox.stub(mockRouter, 'all');
       sandbox.stub(mockRouter, 'param');
@@ -67,10 +59,9 @@ describe('modules/users/server/routes/admin.server.routes.js', () => {
   });
 
   describe('/ route', () => {
-    let app, routerStub, mockRouter, routeStub, realRoute, mockRoute;
+    let routerStub, mockRouter, routeStub, realRoute, mockRoute;
 
     beforeEach(() => {
-      app = express();
       mockRouter = express.Router();
       mockRoute = {
         get: sandbox.stub().returnsThis()
@@ -95,10 +86,9 @@ describe('modules/users/server/routes/admin.server.routes.js', () => {
   });
 
   describe('/:userId route', () => {
-    let app, routerStub, mockRouter, routeStub, realRoute, mockRoute;
+    let routerStub, mockRouter, routeStub, realRoute, mockRoute;
 
     beforeEach(() => {
-      app = express();
       mockRouter = express.Router();
       mockRoute = {
         get: sandbox.stub().returnsThis(),

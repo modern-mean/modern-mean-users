@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('users')
+    .module('users.services')
     .factory('Authorization', Authorization);
 
   Authorization.$inject = ['$resource'];

@@ -19,8 +19,6 @@ var _usersServerModel2 = _interopRequireDefault(_usersServerModel);
 
 var _acl = require('../config/acl.js');
 
-var _acl2 = _interopRequireDefault(_acl);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 let users = {};
@@ -59,30 +57,37 @@ function getUser(template) {
 
     User.findOne({ 'providers.email': template.email, 'providers.type': 'local' }).then(user => {
       if (!user) {
-        resolve(new User(template));
+        _logger2.default.debug('Users::Model::Seed::getUser::Creating');
+        return resolve(new User(template));
       }
-      resolve(user);
+      _logger2.default.debug('Users::Model::Seed::getUser::Found');
+      return resolve(user);
+    }).catch(err => {
+      _logger2.default.error('Users::Model::Seed::getUser', err);
+      reject(err);
     });
   });
 }
 
-function seedUser() {
+function seedUser(template) {
   return new Promise((resolve, reject) => {
     _logger2.default.debug('Users::Model::Seed::User::Start');
     let LocalProvider = _usersServerModel2.default.getModels().provider;
     let Email = _usersServerModel2.default.getModels().email;
-
+    if (!template) {
+      template = userTemplate;
+    }
     let passwordPromise = LocalProvider.generateRandomPassphrase();
-    let userPromise = getUser(userTemplate);
+    let userPromise = getUser(template);
 
     Promise.all([passwordPromise, userPromise]).then(promises => {
       let user = promises[1];
-      let password = promises[0];
+      let password = template.password || promises[0];
 
       //Set email if its not set
       if (user.emails.length === 0) {
         let email = new _usersServerModel2.default.getModels().email({
-          email: userTemplate.email,
+          email: template.email,
           primary: true
         });
         user.emails.push(email);
@@ -98,6 +103,7 @@ function seedUser() {
           postalCode: '90210',
           country: 'US'
         });
+        _logger2.default.debug('Users::Model::Seed::Address::Added');
         user.addresses.push(address);
       }
 
@@ -106,25 +112,26 @@ function seedUser() {
       //Set provider
       let provider = new LocalProvider({
         type: 'local',
-        email: userTemplate.email,
+        email: template.email,
         clearpassword: password
       });
 
       user.providers.push(provider);
       _logger2.default.debug('Users::Model::Seed::User::PreSave');
-      user.save().then(() => {
-        _acl2.default.get().addUserRoles(user._id.toString(), ['user']).then(() => {
+      return user.save().then(() => {
+        _logger2.default.debug('Users::Model::Seed::User::PostSave');
+        return _acl.acl.addUserRoles(user._id.toString(), ['user']).then(() => {
           users.user = user.toObject();
           users.user.password = password;
-          _logger2.default.info('Users::Model::Seed::User::' + _chalk2.default.bold.magenta(user.emails[0].email + ':' + password));
-          resolve(user);
+          _logger2.default.info('Users::Model::Seed::User::' + _chalk2.default.bold.magenta(user.providers[0].email + ':' + password));
+          return resolve(user);
         }).catch(err => {
           console.log(_chalk2.default.bold.red('Users::Model::Seed::User::Role::Error::' + err));
-          reject(err);
+          return reject(err);
         });
       }).catch(err => {
         console.log(_chalk2.default.bold.red('Users::Model::Seed::User::Error::' + err));
-        reject(err);
+        return reject(err);
       });
     });
   });
@@ -164,7 +171,7 @@ function seedAdmin() {
       user.providers.push(provider);
 
       user.save().then(() => {
-        _acl2.default.get().addUserRoles(user._id.toString(), ['admin']).then(() => {
+        _acl.acl.addUserRoles(user._id.toString(), ['admin']).then(() => {
           users.admin = user.toObject();
           users.admin.password = password;
           _logger2.default.info('Users::Model::Seed::User::' + _chalk2.default.bold.magenta(user.emails[0].email + ':' + password));

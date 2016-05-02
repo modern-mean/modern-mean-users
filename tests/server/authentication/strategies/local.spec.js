@@ -1,33 +1,11 @@
 'use strict';
 
-import expressModule from 'modern-mean-core-material/dist/server/app/express';
 import passport from 'passport';
-import request from 'supertest';
-import { mongoose } from 'modern-mean-core-material/dist/server/app/mongoose';
 import * as localStrategy from '../../../../server/authentication/strategies/local';
-import userSeed from '../../../../server/models/users.server.model.user.seed';
-import mean from 'modern-mean-core-material/dist/server/app/init';
-import { load } from 'modern-mean-core-material/dist/server/config/config'
 
 let sandbox;
-let app;
-let users;
 
 describe('/modules/users/server/authentication/strategies/local.js', () => {
-
-  before(() => {
-    process.env.MEAN_CORE_MODULES_CUSTOM = './server/users.module.js';
-    load();
-    return mean.start()
-      .then(userSeed.init)
-      .then(seedUsers => {
-        users = seedUsers;
-      });
-  });
-
-  after(() => {
-    return mean.stop();
-  });
 
   beforeEach(() => {
     return sandbox = sinon.sandbox.create();
@@ -82,11 +60,12 @@ describe('/modules/users/server/authentication/strategies/local.js', () => {
     describe('success', () => {
 
       it('should authenticate the user', done => {
-        request(expressModule.getExpressApp())
+        request(meanexpress)
           .post('/api/auth/signin')
-          .send({ email: users.user.providers[0].email, password: users.user.password })
+          .send({ email: testUser.providers[0].email, password: testUserPassword })
           .expect(200)
           .end((err, res) => {
+            console.log(res.body)
             expect(res.body.token).to.exist;
             done();
           });
@@ -100,7 +79,7 @@ describe('/modules/users/server/authentication/strategies/local.js', () => {
       describe('user not found', () => {
 
         it('should respond 500', done => {
-          request(expressModule.getExpressApp())
+          request(meanexpress)
             .post('/api/auth/signin')
             .send({ email: 'asdfadsf434983249@asdfjie.com', password: 'asdfasdf' })
             .expect(500)
@@ -115,9 +94,9 @@ describe('/modules/users/server/authentication/strategies/local.js', () => {
       describe('authentication failure', () => {
 
         it('should responsd 500', done => {
-          request(expressModule.getExpressApp())
+          request(meanexpress)
             .post('/api/auth/signin')
-            .send({ email: users.user.providers[0].email, password: 'failme' })
+            .send({ email: testUser.providers[0].email, password: 'failme' })
             .expect(500)
             .end((err, res) => {
               expect(res.error.text).to.equal('Invalid email or password\n');
@@ -141,9 +120,9 @@ describe('/modules/users/server/authentication/strategies/local.js', () => {
         });
 
         it('should respond 500', done => {
-          request(expressModule.getExpressApp())
+          request(meanexpress)
             .post('/api/auth/signin')
-            .send({ email: users.user.providers[0].email, password: users.user.password })
+            .send({ email: testUser.providers[0].email, password: testUserPassword })
             .expect(500)
             .end((err, res) => {
               expect(res.error.text).to.contain('Yippee');

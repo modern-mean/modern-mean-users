@@ -7,6 +7,9 @@ import coveralls from 'gulp-coveralls';
 import debug from 'gulp-debug';
 import eslint from 'gulp-eslint';
 import filter from 'gulp-filter';
+import jeditor from 'gulp-json-editor';
+import ngConfig from 'gulp-ng-config';
+import rename from 'gulp-rename';
 import del from 'del';
 import mainBowerFiles from 'main-bower-files';
 import templateCache from 'gulp-angular-templatecache';
@@ -15,12 +18,13 @@ import pngquant from 'imagemin-pngquant';
 import { Server as KarmaServer } from 'karma';
 import istanbul from 'gulp-istanbul';
 import mocha from 'gulp-mocha';
+import { clientConfig } from './server/config/config';
 
 var isparta = require('isparta');
 
 function setTest() {
   process.env.NODE_ENV = 'test';
-  process.env.MEAN_CORE_MONGOOSE_DB = 'modern-mean-test';
+  process.env.MM_MONGOOSE_DB = 'modern-mean-test';
 }
 
 function cleanClient() {
@@ -52,7 +56,7 @@ clean.displayName = 'clean';
 gulp.task(clean);
 
 function lint() {
-  return gulp.src(['./server/**/*.js', './client/**/*.js', './test/**/*.js'])
+  return gulp.src(['./server/**/*.js', './client/**/*.js', './test/**/*.js', '!**/client/**/*.constants.js', '!**/client/**/*.values.js'])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());
@@ -133,6 +137,7 @@ function testServerSingle(done) {
   		.pipe(mocha({
         reporter: 'spec',
         require: ['./tests/mocha.setup'],
+        timeout: 3000
       }))
   		.pipe(istanbul.writeReports(
         {
@@ -172,22 +177,51 @@ function sendCoveralls() {
 sendCoveralls.displayName = 'coveralls';
 gulp.task(sendCoveralls);
 
+function buildConfig() {
+  return gulp.src('./server/config/client.json')
+    .pipe(jeditor(function(json) {
+      let stringy = JSON.stringify(clientConfig.constants); // must return JSON object.
+      return JSON.parse(stringy);
+    }))
+    .pipe(ngConfig('users.config', {
+      wrap: true,
+      createModule: false
+    }))
+    .pipe(rename('users.client.config.constants.js'))
+    .pipe(gulp.dest('./client/config'))
+    .pipe(gulp.src('./server/config/client.json'))
+    .pipe(jeditor(function(json) {
+      let stringy = JSON.stringify(clientConfig.values); // must return JSON object.
+      return JSON.parse(stringy);
+    }))
+    .pipe(ngConfig('users.config', {
+      type: 'value',
+      wrap: true,
+      createModule: false
+    }))
+    .pipe(rename('users.client.config.values.js'))
+    .pipe(gulp.dest('./client/config'));
+
+}
+buildConfig.displayName = 'client:config';
+gulp.task(buildConfig);
+
 //Build Client
-let client = gulp.series(cleanClient, gulp.parallel(images, templates, application, vendor));
+let client = gulp.series(cleanClient, buildConfig, gulp.parallel(images, templates, application, vendor));
 client.displayName = 'client';
 gulp.task(client);
 
 //Build Server
-let server = gulp.series(cleanServer, gulp.parallel(serverBabel));
+let server = gulp.series(cleanServer, buildConfig, gulp.parallel(serverBabel));
 server.displayName = 'server';
 gulp.task(server);
 
 //Gulp Default
-let defaultTask = gulp.series(clean, gulp.parallel(client, server));
+let defaultTask = gulp.series(clean, buildConfig, gulp.parallel(client, server));
 defaultTask.displayName = 'default';
 gulp.task(defaultTask);
 
 //Gulp Test
-let testTask = gulp.series(clean, lint, defaultTask, testClientSingle, testServerSingle);
+let testTask = gulp.series(lint, defaultTask, testClientSingle, testServerSingle);
 testTask.displayName = 'test';
 gulp.task(testTask);

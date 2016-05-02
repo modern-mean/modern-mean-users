@@ -1,37 +1,39 @@
 import nodeacl from 'acl';
 import logger from './logger';
-import mongooseModule from 'modern-mean-core-material/dist/server/app/mongoose';
+import { ready as mongooseReady, mongoose } from './mongoose';
+import chalk from 'chalk';
 
-let acl;
+let ready,
+  acl;
 
 function init() {
-  acl = new Promise((resolve, reject) => {
-    logger.debug('User::Acl::Init::Start');
-
-    mongooseModule
-      .connect()
-      .then(db => {
-        acl = new nodeacl(new nodeacl.mongodbBackend(db.connection.db, 'acl_'));
+  ready = new Promise((resolve, reject) => {
+    logger.silly(chalk.red('User::Acl::Init::Start'), mongooseReady);
+    return mongooseReady
+      .then(() => {
+        acl = new nodeacl(new nodeacl.mongodbBackend(mongoose.connection.db, 'acl_'));
         logger.verbose('User::Acl::Init::Success');
         return resolve(acl);
+      })
+      .catch(err => {
+        logger.error('User::Acl::Init::Error');
+        return reject(err);
       });
 
   });
 }
 
-function get() {
-  return acl;
-}
-
 function destroy() {
+  logger.debug('User::Acl::Destroy');
   acl = undefined;
+  ready = undefined;
 }
 
-if (acl === undefined) {
+if (ready === undefined && acl === undefined) {
   init();
 }
 
-let service = { init: init, get: get, destroy: destroy };
+let service = { acl: acl, ready: ready, destroy: destroy };
 
 export default service;
-export { init, get, destroy };
+export { acl, destroy, ready };

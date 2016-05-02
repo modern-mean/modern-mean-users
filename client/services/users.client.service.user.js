@@ -2,20 +2,20 @@
   'use strict';
 
   angular
-    .module('users')
+    .module('users.services')
     .factory('User', User);
 
-  User.$inject = ['$resource'];
+  User.$inject = ['$resource', 'MODULES'];
 
-  function User($resource) {
+  function User($resource, MODULES) {
 
-    return $resource('/api/me', {}, {
+    return $resource(MODULES.users.api.endpoints.me, {}, {
       addresses: {
-        url: '/api/me/addresses',
+        url: MODULES.users.api.endpoints.me + '/addresses',
         method: 'PUT'
       },
       emails: {
-        url: '/api/me/emails',
+        url: MODULES.users.api.endpoints.me + '/emails',
         method: 'PUT'
       },
       update: {

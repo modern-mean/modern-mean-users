@@ -1,11 +1,12 @@
 'use strict';
 
 import passport from 'passport';
-import { express } from 'modern-mean-core-material/dist/server/app/express';
+import express from 'express';
 import logger from '../config/logger';
 import multer from 'multer';
 import { profile, password, authorization } from '../controllers/users.server.controller';
 import profileUpload from '../config/profileUpload';
+import { config } from '../config/config';
 
 function init(app) {
   return new Promise((resolve, reject) => {
@@ -33,7 +34,7 @@ function init(app) {
     router.route('/password').post(password.changePassword);
     router.route('/picture').post(upload.single('newProfilePicture'), profile.changeProfilePicture);
 
-    app.use('/api/me', router);
+    app.use(config.modules.users.api.endpoints.me, router);
     logger.verbose('Users::Routes::Success');
     return resolve(app);
   });
