@@ -2,6 +2,7 @@
   'use strict';
 
   app.registerModule('users', ['core', 'ngFileUpload']);
+  app.registerModule('users.templates', ['core']);
   app.registerModule('users.config', ['core.config']);
   app.registerModule('users.services', ['users.config']);
   app.registerModule('users.routes', ['core.routes', 'users.config']);
@@ -9,6 +10,19 @@
   app.registerModule('users.admin.routes', ['core.routes']);
 
 })(window.modernMeanApplication);
+
+(function () { 
+ return angular.module("users.config")
+.constant("MODULES", {"users":{"enable":"true","api":{"hostname":"","endpoints":{"me":"/api/me","auth":"/api/auth"}}},"admin":{"enable":"true","api":{"hostname":"","endpoint":"/api/users"}}})
+.constant("SOCIAL", {"facebook":{"enable":"false","callback":"/api/auth/facebook/callback"},"twitter":{"enable":"false","callback":"/api/auth/twitter/callback"},"google":{"enable":"false","callback":"/api/auth/google/callback"},"linkedin":{"enable":"false","callback":"/api/auth/google/callback"},"github":{"enable":"false","callback":"/api/auth/google/callback"}});
+
+})();
+
+(function () { 
+ return angular.module("core.config")
+.value("UPLOAD", {"profile":{"destination":"./public/img/profile/uploads/","public":"/img/profile/uploads/","limits":{"fileSize":"1045876"}}});
+
+})();
 
 (function() {
   'use strict';
@@ -227,12 +241,6 @@
   function getUser(Authentication) {
     return Authentication.user;
   }
-
-})();
-
-(function () { 
- return angular.module("users.config")
-.value("UPLOAD", {"profile":{"destination":"./public/img/profile/uploads/","public":"/img/profile/uploads/","limits":{"fileSize":"1045876"}}});
 
 })();
 

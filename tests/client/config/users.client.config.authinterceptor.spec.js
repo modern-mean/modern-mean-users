@@ -13,7 +13,6 @@
     });
 
     it('should add an auth interceptor', function () {
-      console.log(JSON.stringify($httpProvider));
       expect($httpProvider.interceptors.indexOf('authInterceptor')).to.not.equal(-1);
     });
 

@@ -80,7 +80,7 @@ describe('/modules/users/server/authentication/strategies/jwt.js', () => {
               .expect(500)
               .end((err, res) => {
                 expect(res.error.text).to.equal('User not found\n');
-                done();
+                return done();
               });
           });
 

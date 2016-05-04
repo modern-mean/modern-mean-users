@@ -65,9 +65,8 @@ describe('/modules/users/server/authentication/strategies/local.js', () => {
           .send({ email: testUser.providers[0].email, password: testUserPassword })
           .expect(200)
           .end((err, res) => {
-            console.log(res.body)
             expect(res.body.token).to.exist;
-            done();
+            return done();
           });
 
       });
@@ -85,7 +84,7 @@ describe('/modules/users/server/authentication/strategies/local.js', () => {
             .expect(500)
             .end((err, res) => {
               expect(res.error.text).to.equal('Invalid email or password\n');
-              done();
+              return done();
             });
         });
 
@@ -100,7 +99,7 @@ describe('/modules/users/server/authentication/strategies/local.js', () => {
             .expect(500)
             .end((err, res) => {
               expect(res.error.text).to.equal('Invalid email or password\n');
-              done();
+              return done();
             });
         });
 
@@ -126,7 +125,7 @@ describe('/modules/users/server/authentication/strategies/local.js', () => {
             .expect(500)
             .end((err, res) => {
               expect(res.error.text).to.contain('Yippee');
-              done();
+              return done();
             });
         });
 
