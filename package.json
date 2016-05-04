@@ -25,7 +25,9 @@
   "dependencies": {
     "acl": "~0.4.9",
     "crypto": "0.0.3",
+    "express": "^4.13.4",
     "generate-password": "~1.1.1",
+    "mongoose": "^4.4.14",
     "multer": "~1.1.0",
     "owasp-password-strength-test": "~1.3.0",
     "passport": "~0.3.2",
@@ -44,7 +46,28 @@
     "modern-mean-core-material": "github:modern-mean/core-material"
   },
   "devDependencies": {
+    "babelify": "^7.3.0",
+    "browserify": "^13.0.0",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^5.3.0",
+    "karma-browserify": "^5.0.4",
+    "karma-chai": "~0.1.0",
+    "karma-chai-as-promised": "~0.1.2",
+    "karma-chrome-launcher": "~0.2.2",
+    "karma-coverage": "~0.5.5",
+    "karma-firefox-launcher": "~0.1.7",
+    "karma-mocha": "~0.2.2",
+    "karma-ng-html2js-preprocessor": "~0.2.1",
+    "karma-phantomjs-launcher": "~1.0.0",
+    "karma-sinon": "~1.0.4",
+    "karma-sinon-chai": "~1.2.0",
     "modern-mean-build-gulp": "github:modern-mean/build-gulp",
-    "modern-mean-core-material": "github:modern-mean/core-material"
+    "modern-mean-core-material": "github:modern-mean/core-material",
+    "phantomjs-prebuilt": "~2.1.7",
+    "sinon": "~1.17.4",
+    "sinon-as-promised": "^4.0.0",
+    "sinon-chai": "~2.8.0",
+    "supertest": "^1.2.0",
+    "watchify": "^3.7.0"
   }
 }
