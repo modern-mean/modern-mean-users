@@ -1,8 +1,8 @@
 'use strict';
 
-import * as adminRoutes from '../../../server/routes/admin.server.routes.js';
-import adminController from '../../../server/controllers/admin.server.controller';
-import userModel from '../../../server/models/users.server.model.user';
+import * as adminRoutes from '../../../src/server/routes/admin.server.routes.js';
+import adminController from '../../../src/server/controllers/admin.server.controller';
+import userModel from '../../../src/server/models/users.server.model.user';
 
 let sandbox;
 

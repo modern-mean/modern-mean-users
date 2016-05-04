@@ -1,6 +1,6 @@
 'use strict';
 
-import mongooseModule from '../../../server/config/mongoose';
+import mongooseModule from '../../../src/server/config/mongoose';
 import mongoose from 'mongoose';
 
 let sandbox;

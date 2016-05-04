@@ -1,7 +1,7 @@
 'use strict';
 
-import * as adminController from '../../../server/controllers/admin.server.controller';
-import userModel from '../../../server/models/users.server.model.user';
+import * as adminController from '../../../src/server/controllers/admin.server.controller';
+import userModel from '../../../src/server/models/users.server.model.user';
 
 let sandbox;
 

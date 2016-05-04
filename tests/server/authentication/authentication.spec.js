@@ -1,9 +1,9 @@
 'use strict';
 
 import passport from 'passport';
-import * as authentication from '../../../server/authentication/authentication';
-import jwtStrategy from '../../../server/authentication/strategies/jwt';
-import localStrategy from '../../../server/authentication/strategies/local';
+import * as authentication from '../../../src/server/authentication/authentication';
+import jwtStrategy from '../../../src/server/authentication/strategies/jwt';
+import localStrategy from '../../../src/server/authentication/strategies/local';
 
 let sandbox;
 

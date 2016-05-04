@@ -1,6 +1,6 @@
 'use strict';
 
-import * as userModel from '../../../server/models/users.server.model.user';
+import * as userModel from '../../../src/server/models/users.server.model.user';
 
 let sandbox;
 

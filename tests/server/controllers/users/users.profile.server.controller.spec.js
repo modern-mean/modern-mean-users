@@ -1,8 +1,8 @@
 'use strict';
 
 import lodash from 'lodash';
-import * as profileController from '../../../../server/controllers/users/users.profile.server.controller';
-import userModel from '../../../../server/models/users.server.model.user';
+import * as profileController from '../../../../src/server/controllers/users/users.profile.server.controller';
+import userModel from '../../../../src/server/models/users.server.model.user';
 
 let sandbox;
 

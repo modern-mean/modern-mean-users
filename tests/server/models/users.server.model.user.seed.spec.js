@@ -1,8 +1,8 @@
 'use strict';
 
-import * as userSeed from '../../../server/models/users.server.model.user.seed';
-import userModel from '../../../server/models/users.server.model.user';
-import aclModule from '../../../server/config/acl';
+import * as userSeed from '../../../src/server/models/users.server.model.user.seed';
+import userModel from '../../../src/server/models/users.server.model.user';
+import aclModule from '../../../src/server/config/acl';
 
 let sandbox;
 

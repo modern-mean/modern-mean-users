@@ -13,12 +13,8 @@ module.exports = function (karmaConfig) {
   karmaFiles.push('../node_modules/modern-mean-core-material/dist/client/bootloader.js');
   karmaFiles.push('../node_modules/modern-mean-core-material/dist/client/vendor.js');
   karmaFiles.push('../node_modules/modern-mean-core-material/dist/client/application.js');
-
-
-
-
   karmaFiles.push('../node_modules/modern-mean-core-material/dist/client/templates.js');
-  karmaFiles = lodash.union(karmaFiles, ['../client/**/*.module.js', '../client/**/!(*module).js', '../tests/client/**/*.js']);
+  karmaFiles = lodash.union(karmaFiles, ['../src/client/**/*.module.js', '../src/client/**/!(*module).js', '../tests/client/**/*.js']);
   karmaFiles.push('../dist/client/vendor.js');
   karmaFiles.push('../dist/client/templates.js');
 
@@ -33,8 +29,8 @@ module.exports = function (karmaConfig) {
 
     preprocessors: {
       'karma.setup.js': [ 'browserify' ],
-      '../client/views/**/*.html': ['ng-html2js'],
-      '../client/**/*.js': ['coverage']
+      '../src/client/views/**/*.html': ['ng-html2js'],
+      '../src/client/**/*.js': ['coverage']
     },
     browserify: {
       debug: true,

@@ -1,12 +1,12 @@
 'use strict';
 
 import expressModule from 'modern-mean-core-material/dist/server/app/express';
-import * as users from '../../server/users.module';
-import userRoutes from '../../server/routes/users.server.routes';
-import authRoutes from '../../server/routes/auth.server.routes';
-import userModel from '../../server/models/users.server.model.user';
-import userSeed from '../../server/models/users.server.model.user.seed';
-import authentication from '../../server/authentication/authentication';
+import * as users from '../../src/server/users.module';
+import userRoutes from '../../src/server/routes/users.server.routes';
+import authRoutes from '../../src/server/routes/auth.server.routes';
+import userModel from '../../src/server/models/users.server.model.user';
+import userSeed from '../../src/server/models/users.server.model.user.seed';
+import authentication from '../../src/server/authentication/authentication';
 
 let sandbox;
 

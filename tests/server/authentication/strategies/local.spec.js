@@ -1,7 +1,7 @@
 'use strict';
 
 import passport from 'passport';
-import * as localStrategy from '../../../../server/authentication/strategies/local';
+import * as localStrategy from '../../../../src/server/authentication/strategies/local';
 
 let sandbox;
 

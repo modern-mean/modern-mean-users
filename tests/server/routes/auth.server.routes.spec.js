@@ -1,8 +1,8 @@
 'use strict';
 
-import * as authRoutes from '../../../server/routes/auth.server.routes.js';
-import userController from '../../../server/controllers/users.server.controller';
-import userModel from '../../../server/models/users.server.model.user';
+import * as authRoutes from '../../../src/server/routes/auth.server.routes.js';
+import userController from '../../../src/server/controllers/users.server.controller';
+import userModel from '../../../src/server/models/users.server.model.user';
 
 let sandbox;
 

@@ -1,7 +1,7 @@
 'use strict';
 
-import * as passwordController from '../../../../server/controllers/users/users.password.server.controller';
-import userModel from '../../../../server/models/users.server.model.user';
+import * as passwordController from '../../../../src/server/controllers/users/users.password.server.controller';
+import userModel from '../../../../src/server/models/users.server.model.user';
 
 let sandbox;
 

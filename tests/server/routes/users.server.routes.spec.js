@@ -1,8 +1,8 @@
 'use strict';
 
 import { express } from 'modern-mean-core-material/dist/server/app/express';
-import * as userRoutes from '../../../server/routes/users.server.routes.js';
-import userController from '../../../server/controllers/users.server.controller';
+import * as userRoutes from '../../../src/server/routes/users.server.routes.js';
+import userController from '../../../src/server/controllers/users.server.controller';
 
 let sandbox;
 

@@ -1,6 +1,6 @@
 'use strict';
 
-import * as jwtToken from '../../../server/authentication/jwtToken';
+import * as jwtToken from '../../../src/server/authentication/jwtToken';
 
 let sandbox;
 

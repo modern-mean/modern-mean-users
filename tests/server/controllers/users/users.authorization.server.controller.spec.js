@@ -1,8 +1,8 @@
 'use strict';
 
-import * as authorizationController from '../../../../server/controllers/users/users.authorization.server.controller';
-import { acl } from '../../../../server/config/acl';
-import userModel from '../../../../server/models/users.server.model.user';
+import * as authorizationController from '../../../../src/server/controllers/users/users.authorization.server.controller';
+import { acl } from '../../../../src/server/config/acl';
+import userModel from '../../../../src/server/models/users.server.model.user';
 
 let sandbox;
 

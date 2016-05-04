@@ -1,8 +1,8 @@
 'use strict';
 
-import adminRoutes from '../../server/routes/admin.server.routes';
-import adminPolicy from '../../server/policies/admin.server.policy';
-import * as adminUsers from '../../server/admin.users.module';
+import adminRoutes from '../../src/server/routes/admin.server.routes';
+import adminPolicy from '../../src/server/policies/admin.server.policy';
+import * as adminUsers from '../../src/server/admin.users.module';
 
 let sandbox,
   app = express();

@@ -1,9 +1,9 @@
 'use strict';
 
-import * as authenticationController from '../../../../server/controllers/users/users.authentication.server.controller';
-import jwtToken from '../../../../server/authentication/jwtToken';
-import userModel from '../../../../server/models/users.server.model.user';
-import { acl } from '../../../../server/config/acl';
+import * as authenticationController from '../../../../src/server/controllers/users/users.authentication.server.controller';
+import jwtToken from '../../../../src/server/authentication/jwtToken';
+import userModel from '../../../../src/server/models/users.server.model.user';
+import { acl } from '../../../../src/server/config/acl';
 
 let sandbox;
 

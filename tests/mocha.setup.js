@@ -4,16 +4,17 @@ import sinonChai from 'sinon-chai';
 import sinonPromised from 'sinon-as-promised';
 import promised from 'chai-as-promised';
 import request from 'supertest';
-import logger from '../server/config/logger';
-import * as config from '../server/config/config';
 import express from 'express';
 import mongoose from 'mongoose';
-import userSeed from '../server/models/users.server.model.user.seed';
-import userModel from '../server/models/users.server.model.user';
-import adminModule from '../server/admin.users.module.js';
-import userModule from '../server/users.module.js';
 import mean from 'modern-mean-core-material/dist/server/app/init';
 import { load } from 'modern-mean-core-material/dist/server/config/config';
+import logger from '../src/server/config/logger';
+import * as config from '../src/server/config/config';
+import userSeed from '../src/server/models/users.server.model.user.seed';
+import userModel from '../src/server/models/users.server.model.user';
+import adminModule from '../src/server/admin.users.module.js';
+import userModule from '../src/server/users.module.js';
+
 
 logger.debug('Users::Test::Setup::Start');
 
@@ -22,7 +23,7 @@ chai.use(promised);
 chai.use(sinonChai);
 
 //Setup environment variables and load configuration
-process.env.MM_CORE_MODULES_CUSTOM = './server/*.module.js';
+process.env.MM_CORE_MODULES_CUSTOM = './src/server/*.module.js';
 load();
 
 //Test user that doesn't change on seeding

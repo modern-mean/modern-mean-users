@@ -1,7 +1,7 @@
 'use strict';
 
-import * as adminPolicy from '../../../server/policies/admin.server.policy';
-import { acl } from '../../../server/config/acl';
+import * as adminPolicy from '../../../src/server/policies/admin.server.policy';
+import { acl } from '../../../src/server/config/acl';
 
 let sandbox;
 

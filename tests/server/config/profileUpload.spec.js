@@ -1,6 +1,6 @@
 'use strict';
 
-import * as profileUpload from '../../../server/config/profileUpload';
+import * as profileUpload from '../../../src/server/config/profileUpload';
 
 let sandbox;
 

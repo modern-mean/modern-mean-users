@@ -1,6 +1,6 @@
 'use strict';
 
-import * as aclModule from '../../../server/config/acl';
+import * as aclModule from '../../../src/server/config/acl';
 
 let sandbox;
 

@@ -1,6 +1,6 @@
 'use strict';
 
-import * as userController from '../../../server/controllers/users.server.controller';
+import * as userController from '../../../src/server/controllers/users.server.controller';
 
 let sandbox;
 
