@@ -40,8 +40,11 @@
     "validator": "~5.1.0",
     "winston": "^2.2.0"
   },
-  "peerDependencies": {},
+  "peerDependencies": {
+    "modern-mean-core-material": "github:modern-mean/core-material"
+  },
   "devDependencies": {
-    "modern-mean-build-gulp": "github:modern-mean/build-gulp"
+    "modern-mean-build-gulp": "github:modern-mean/build-gulp",
+    "modern-mean-core-material": "github:modern-mean/core-material"
   }
 }
