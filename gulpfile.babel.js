@@ -32,12 +32,16 @@ server.displayName = 'server';
 gulp.task(server);
 
 //Gulp Default
-//let defaultTask = gulp.series(modules.clean, modules.server.config, gulp.parallel(modules.client.build, modules.server.build));
 let defaultTask = gulp.parallel(client, server);
 defaultTask.displayName = 'default';
 gulp.task(defaultTask);
 
-//Gulp Default
+//Gulp Watch
+let watch = gulp.series(defaultTask, modules.watch.all);
+watch.displayName = 'watch';
+gulp.task(watch);
+
+//Gulp Lint
 let lint = gulp.series(modules.lint.all);
 lint.displayName = 'lint';
 gulp.task(lint);

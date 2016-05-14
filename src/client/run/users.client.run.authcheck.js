@@ -28,7 +28,7 @@
             });
 
             if (!allowed) {
-              $log.debug('Users::AuthCheck::NotAllowed', Authentication);
+              $log.debug('Users::AuthCheck::NotAlloweda', Authentication);
               event.preventDefault();
               if (Authentication.token !== undefined) {
                 $state.go('root.forbidden');
